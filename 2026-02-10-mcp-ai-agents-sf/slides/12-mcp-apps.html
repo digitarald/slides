@@ -1,0 +1,63 @@
+<!-- 12: MCP Apps deep dive -->
+<section class="slide">
+    <div class="slide-content">
+        <span class="badge badge-purple reveal">MCP Apps</span>
+
+        <h2 class="reveal">Interactive UI<br><span class="accent-purple">inside chat</span></h2>
+
+        <p class="reveal" style="margin-bottom: 2rem;">
+            MCP Apps let tools return rich, interactive components that render directly in chat — users manipulate results instead of reading a wall of prose.
+        </p>
+
+        <div class="two-col narrow-wide">
+            <div class="reveal-left">
+                <h3 style="margin-bottom: 1rem;">Painful in text</h3>
+                <ul class="feature-list">
+                    <li>Drag-and-drop ordering</li>
+                    <li>Visual profiling / flame graphs</li>
+                    <li>Form-based selection</li>
+                    <li>Data visualization dashboards</li>
+                </ul>
+
+                <div class="callout" style="margin-top: 2rem;">
+                    <h3>The killer line</h3>
+                    <p>"If the output is interactive, the agent respects your time."</p>
+                </div>
+            </div>
+
+            <div class="reveal-right">
+                <!-- CSS mock-up: MCP App interactive UI in chat -->
+                <div class="mock-chat-panel">
+                    <div class="mock-chat-message">
+                        <div class="mock-chat-avatar">🤖</div>
+                        <div class="mock-chat-body">
+                            <p class="mock-chat-text">Here's the performance profile for <code>handleRequest()</code>:</p>
+                            <div class="mock-mcp-app">
+                                <div class="mock-app-toolbar">
+                                    <span class="mock-app-label">🖥️ MCP App</span>
+                                    <span class="mock-app-name">flame-graph</span>
+                                </div>
+                                <div class="mock-flame-graph">
+                                    <div class="mock-flame-row" style="width: 100%;">
+                                        <span>main() — 420ms</span>
+                                    </div>
+                                    <div class="mock-flame-row" style="width: 72%; background: rgba(88, 166, 255, 0.25); border-color: rgba(88, 166, 255, 0.4);">
+                                        <span>handleRequest() — 302ms</span>
+                                    </div>
+                                    <div style="display: flex; gap: 2px; width: 72%;">
+                                        <div class="mock-flame-row" style="flex: 3; background: rgba(247, 129, 102, 0.3); border-color: rgba(247, 129, 102, 0.5);">
+                                            <span>db.query()</span>
+                                        </div>
+                                        <div class="mock-flame-row" style="flex: 1;">
+                                            <span>serialize()</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

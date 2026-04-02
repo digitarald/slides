@@ -1,0 +1,47 @@
+<!-- 10: Demo Cover — Tasks -->
+<section class="slide demo-slide">
+    <div class="slide-content">
+        <div class="demo-badge reveal">Live Demo</div>
+
+        <h2 class="reveal">Async Tasks<br><span class="accent">in action</span></h2>
+
+        <p class="reveal">
+            The auth handoff we triggered is now running — watch how tasks surface progress in real time.
+        </p>
+
+        <ul class="demo-checklist reveal">
+            <li>Long-running tool with live progress</li>
+            <li>UI replaces tool name with current state</li>
+            <li>"3 of 12" instead of a spinning cursor</li>
+        </ul>
+
+        <div class="mock-task-timeline reveal" style="margin-top: 2rem; max-width: 600px;">
+            <div class="mock-timeline-step done">
+                <div class="mock-timeline-marker">✓</div>
+                <div class="mock-timeline-content">
+                    <strong>Auth handoff complete</strong>
+                    <span>OAuth token received, scoped to read:org</span>
+                </div>
+            </div>
+            <div class="mock-timeline-step active">
+                <div class="mock-timeline-marker">
+                    <span class="mock-spinner"></span>
+                </div>
+                <div class="mock-timeline-content">
+                    <strong>Syncing organization data…</strong>
+                    <span>3 of 12 repositories indexed</span>
+                    <div class="mock-progress-bar" style="margin-top: 0.5rem; height: 4px;">
+                        <div class="mock-progress-fill" style="width: 25%;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="mock-timeline-step pending">
+                <div class="mock-timeline-marker">○</div>
+                <div class="mock-timeline-content">
+                    <strong>Generate report</strong>
+                    <span>Waiting for sync to complete</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

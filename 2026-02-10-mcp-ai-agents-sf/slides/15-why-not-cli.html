@@ -1,0 +1,41 @@
+<!-- 15: Callback — "But you can do everything with bash" -->
+<section class="slide">
+    <div class="slide-content">
+        <span class="badge badge-orange reveal">The Skeptic's Question</span>
+
+        <h2 class="reveal">"You can do everything<br>with <span class="accent-orange">bash</span>."</h2>
+
+        <p class="reveal" style="margin-bottom: 2rem;">
+            That's true for execution. But you've now seen what MCP adds beyond CLI tools:
+        </p>
+
+        <div class="grid-3 reveal">
+            <div class="card">
+                <div class="card-icon">💬</div>
+                <h3>Elicitations</h3>
+                <p>Server-to-user input that bypasses the model. Bash can prompt — but it can't redirect to an OAuth flow, receive a scoped token, or decide what the agent shouldn't see.</p>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">⏳</div>
+                <h3>Tasks</h3>
+                <p>Progressive updates in the agent UI. Bash has stdout — but the agent doesn't surface "3 of 12" in a structured progress bar. Long work is a spinner or silence.</p>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">🖥️</div>
+                <h3>MCP Apps</h3>
+                <p>Interactive UI inside the agent. Bash can't render a flame graph you can click on, or a checkout flow you can fill out, in the chat window.</p>
+            </div>
+        </div>
+
+        <div class="callout reveal" style="margin-top: 2rem;">
+            <h3>Plus: agent identity</h3>
+            <p>OAuth 2.1 with per-server audience binding (RFC 8707). Each MCP server gets its own scoped token. A compromised token for GitHub can't be replayed against your finance server. The <strong class="accent">GitHub MCP Server</strong> adds implementation-level OAuth scope filtering — detecting token type and hiding tools you lack permissions for.</p>
+        </div>
+
+        <p class="reveal" style="margin-top: 1.5rem; text-align: center; font-size: 1.15rem;">
+            <em>"Bash does execution. MCP does collaboration."</em>
+        </p>
+    </div>
+</section>

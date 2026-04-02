@@ -1,0 +1,836 @@
+/* ===========================================
+   FROM TOOLS TO CAPABILITY
+   What Actually Drives AI Adoption
+   Bold creative energy. Warm gradients on deep dark.
+   =========================================== */
+
+/* ===========================================
+   FONTS
+   Syne for display — bold, geometric, futuristic
+   DM Sans for body — clean, warm, readable
+   JetBrains Mono for code accents
+   =========================================== */
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* ===========================================
+   CSS CUSTOM PROPERTIES
+   =========================================== */
+:root {
+    /* Core backgrounds — deep indigo-charcoal */
+    --bg-primary: #0c0a1a;
+    --bg-secondary: #13112a;
+    --bg-tertiary: #1c1938;
+    --bg-card: rgba(28, 25, 56, 0.8);
+
+    /* Text hierarchy */
+    --text-primary: #f5f0ff;
+    --text-secondary: #b8b0d0;
+    --text-muted: #7a7294;
+
+    /* Accent — warm coral/orange */
+    --accent: #ff6b35;
+    --accent-bright: #ff8c5a;
+    --accent-dim: #cc5529;
+    --accent-glow: rgba(255, 107, 53, 0.3);
+
+    /* Secondary — vivid purple */
+    --purple: #7c3aed;
+    --purple-bright: #9f67ff;
+    --purple-glow: rgba(124, 58, 237, 0.25);
+
+    /* Tertiary — electric teal for code/data */
+    --teal: #2dd4bf;
+    --teal-glow: rgba(45, 212, 191, 0.2);
+
+    /* Warm yellow for highlights */
+    --yellow: #fbbf24;
+
+    /* Borders */
+    --border: rgba(245, 240, 255, 0.08);
+    --border-active: rgba(255, 107, 53, 0.4);
+
+    /* Typography */
+    --font-display: 'Syne', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+
+    /* Spacing */
+    --slide-padding: clamp(2rem, 5vw, 5rem);
+    --content-max-width: 1200px;
+
+    /* Animation */
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --ease-spring: cubic-bezier(0.22, 1.35, 0.55, 1);
+    --duration-fast: 0.3s;
+    --duration-normal: 0.6s;
+    --duration-slow: 1s;
+    --duration-dramatic: 1.4s;
+}
+
+/* ===========================================
+   RESET & BASE
+   =========================================== */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    scroll-snap-type: y mandatory;
+    font-size: 16px;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.5;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scrollbar-width: none;
+}
+
+body::-webkit-scrollbar {
+    display: none;
+}
+
+/* ===========================================
+   ATMOSPHERIC BACKGROUND
+   Warm gradient mesh with floating orbs
+   =========================================== */
+.atmosphere {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+        radial-gradient(ellipse 80% 60% at 10% 90%, rgba(255, 107, 53, 0.06) 0%, transparent 50%),
+        radial-gradient(ellipse 60% 50% at 90% 10%, rgba(124, 58, 237, 0.07) 0%, transparent 50%),
+        radial-gradient(ellipse 70% 70% at 50% 50%, rgba(45, 212, 191, 0.03) 0%, transparent 50%);
+}
+
+.atmosphere::before,
+.atmosphere::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    animation: float 20s ease-in-out infinite;
+}
+
+.atmosphere::before {
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(255, 107, 53, 0.08), transparent 70%);
+    top: -200px;
+    right: -100px;
+    animation-delay: -5s;
+}
+
+.atmosphere::after {
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(124, 58, 237, 0.07), transparent 70%);
+    bottom: -150px;
+    left: -100px;
+    animation-delay: -10s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(30px, -40px) scale(1.05); }
+    50% { transform: translate(-20px, 20px) scale(0.95); }
+    75% { transform: translate(15px, 30px) scale(1.02); }
+}
+
+/* ===========================================
+   PROGRESS INDICATOR
+   =========================================== */
+.progress-indicator {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--purple));
+    width: 0%;
+    z-index: 1000;
+    transition: width var(--duration-fast) ease-out;
+    box-shadow: 0 0 12px var(--accent-glow);
+}
+
+/* ===========================================
+   SLIDE COUNTER
+   =========================================== */
+.slide-counter {
+    position: fixed;
+    bottom: 2rem;
+    left: 2rem;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    z-index: 100;
+    font-variant-numeric: tabular-nums;
+}
+
+.slide-counter .current {
+    color: var(--accent);
+    font-weight: 500;
+}
+
+/* ===========================================
+   NAVIGATION DOTS
+   =========================================== */
+.nav-dots {
+    position: fixed;
+    right: 2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    z-index: 100;
+}
+
+.nav-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--text-muted);
+    border: none;
+    cursor: pointer;
+    transition: all var(--duration-fast) var(--ease-out-expo);
+    opacity: 0.3;
+}
+
+.nav-dot:hover {
+    opacity: 0.6;
+    transform: scale(1.3);
+}
+
+.nav-dot.active {
+    opacity: 1;
+    background: var(--accent);
+    box-shadow: 0 0 10px var(--accent-glow);
+    transform: scale(1.2);
+}
+
+/* ===========================================
+   SLIDE CONTAINER
+   =========================================== */
+.slide {
+    height: 100vh;
+    padding: var(--slide-padding);
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.slide-content {
+    max-width: var(--content-max-width);
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* ===========================================
+   TYPOGRAPHY
+   =========================================== */
+h1 {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 7vw, 5.5rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.25rem;
+}
+
+h2 {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4.5vw, 3.5rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+}
+
+h3 {
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+    font-weight: 600;
+    line-height: 1.25;
+    margin-bottom: 0.75rem;
+}
+
+p {
+    font-size: clamp(1rem, 1.5vw, 1.25rem);
+    color: var(--text-secondary);
+    max-width: 52ch;
+    line-height: 1.6;
+}
+
+/* ===========================================
+   GRADIENT ACCENTS
+   =========================================== */
+.gradient-text {
+    background: linear-gradient(135deg, var(--accent), var(--purple-bright));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.gradient-text-warm {
+    background: linear-gradient(135deg, var(--yellow), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.accent { color: var(--accent); }
+.purple { color: var(--purple-bright); }
+.teal { color: var(--teal); }
+.yellow { color: var(--yellow); }
+.muted { color: var(--text-muted); }
+
+/* ===========================================
+   TITLE SLIDE
+   =========================================== */
+.title-slide {
+    text-align: center;
+    background:
+        radial-gradient(ellipse 50% 60% at 50% 45%, rgba(124, 58, 237, 0.1) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 30% 70%, rgba(255, 107, 53, 0.08) 0%, transparent 50%);
+}
+
+.title-slide .slide-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.title-slide h1 {
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    margin-bottom: 1.5rem;
+}
+
+.title-slide .date {
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-top: 3rem;
+    letter-spacing: 0.02em;
+}
+
+/* Deck label / tag */
+.deck-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 1rem;
+    background: rgba(255, 107, 53, 0.1);
+    border: 1px solid rgba(255, 107, 53, 0.25);
+    border-radius: 100px;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 2rem;
+    width: fit-content;
+}
+
+.deck-label::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+}
+
+.subtitle {
+    font-size: clamp(1.15rem, 2vw, 1.5rem);
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+    max-width: 40ch;
+}
+
+/* ===========================================
+   SECTION / STANZA INTRO SLIDE
+   =========================================== */
+.section-slide {
+    text-align: center;
+    background: linear-gradient(160deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+}
+
+.section-slide .slide-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.section-number {
+    font-family: var(--font-display);
+    font-size: clamp(6rem, 15vw, 12rem);
+    font-weight: 800;
+    background: linear-gradient(180deg, var(--accent), transparent);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    opacity: 0.2;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+}
+
+.act-label {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 1rem;
+}
+
+/* Section slide subtitle */
+.section-subtitle {
+    font-size: clamp(1.05rem, 1.8vw, 1.35rem);
+    color: var(--text-secondary);
+    max-width: 42ch;
+    line-height: 1.55;
+    margin-top: 0.5rem;
+}
+
+/* ===========================================
+   CONTENT CARDS
+   =========================================== */
+.card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.75rem;
+    transition: border-color var(--duration-fast) ease,
+                transform var(--duration-fast) var(--ease-out-expo),
+                box-shadow var(--duration-fast) ease;
+    backdrop-filter: blur(8px);
+}
+
+.card:hover {
+    border-color: var(--border-active);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(255, 107, 53, 0.08);
+}
+
+.card h3 {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.card p {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    line-height: 1.55;
+}
+
+/* Card accent top border */
+.card-accent {
+    border-top: 2px solid var(--accent);
+}
+
+.card-purple {
+    border-top: 2px solid var(--purple);
+}
+
+.card-teal {
+    border-top: 2px solid var(--teal);
+}
+
+.card-yellow {
+    border-top: 2px solid var(--yellow);
+}
+
+/* Card grid layouts */
+.card-grid {
+    display: grid;
+    gap: 1.25rem;
+}
+
+.card-grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.card-grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+/* ===========================================
+   STAT / CALLOUT BLOCKS
+   =========================================== */
+.stat-block {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.stat-number {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 6vw, 5rem);
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 0.25rem;
+}
+
+.stat-label {
+    font-size: 1rem;
+    color: var(--text-secondary);
+}
+
+/* Big quote / callout */
+.callout {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 3.5vw, 2.75rem);
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    max-width: 22ch;
+    position: relative;
+    padding-left: 1.5rem;
+    border-left: 3px solid var(--accent);
+}
+
+.callout em {
+    font-style: italic;
+    color: var(--accent-bright);
+}
+
+/* Centered callout variant */
+.callout-center {
+    text-align: center;
+    border-left: none;
+    padding-left: 0;
+    max-width: 30ch;
+    margin: 0 auto;
+}
+
+/* ===========================================
+   PILL / TAG ELEMENTS
+   =========================================== */
+.pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0.75rem;
+    border-radius: 100px;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+}
+
+.pill-accent {
+    background: rgba(255, 107, 53, 0.12);
+    color: var(--accent);
+    border: 1px solid rgba(255, 107, 53, 0.25);
+}
+
+.pill-purple {
+    background: rgba(124, 58, 237, 0.12);
+    color: var(--purple-bright);
+    border: 1px solid rgba(124, 58, 237, 0.25);
+}
+
+.pill-teal {
+    background: rgba(45, 212, 191, 0.12);
+    color: var(--teal);
+    border: 1px solid rgba(45, 212, 191, 0.25);
+}
+
+.pill-yellow {
+    background: rgba(251, 191, 36, 0.12);
+    color: var(--yellow);
+    border: 1px solid rgba(251, 191, 36, 0.25);
+}
+
+/* ===========================================
+   HORIZONTAL RULE / DIVIDER
+   =========================================== */
+.divider {
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--purple));
+    border: none;
+    border-radius: 2px;
+    margin: 1.5rem 0;
+}
+
+/* ===========================================
+   CAPABILITY PREVIEW (opening slide)
+   =========================================== */
+.capability-preview {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-top: 2.5rem;
+}
+
+.capability-item {
+    text-align: center;
+    padding: 1.25rem 0.75rem;
+    border-radius: 12px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    transition: border-color var(--duration-fast) ease;
+}
+
+.capability-item:hover {
+    border-color: var(--border-active);
+}
+
+.capability-icon {
+    font-size: 1.75rem;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.capability-name {
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.capability-desc {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+}
+
+/* ===========================================
+   ICON CIRCLES
+   =========================================== */
+.icon-circle {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.icon-circle-accent {
+    background: rgba(255, 107, 53, 0.12);
+    border: 1px solid rgba(255, 107, 53, 0.25);
+}
+
+.icon-circle-purple {
+    background: rgba(124, 58, 237, 0.12);
+    border: 1px solid rgba(124, 58, 237, 0.25);
+}
+
+.icon-circle-teal {
+    background: rgba(45, 212, 191, 0.12);
+    border: 1px solid rgba(45, 212, 191, 0.25);
+}
+
+/* ===========================================
+   CLOSE / CTA SECTION
+   =========================================== */
+.cta-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    counter-reset: cta;
+}
+
+.cta-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    counter-increment: cta;
+}
+
+.cta-number {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--purple));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+}
+
+.cta-text {
+    font-size: 1.15rem;
+    color: var(--text-primary);
+    line-height: 1.5;
+}
+
+.cta-text em {
+    color: var(--accent-bright);
+    font-style: normal;
+    font-weight: 500;
+}
+
+/* ===========================================
+   REVEAL ANIMATIONS
+   =========================================== */
+.reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity var(--duration-normal) var(--ease-out-expo),
+                transform var(--duration-normal) var(--ease-out-expo);
+}
+
+.slide.visible .reveal {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Stagger children */
+.reveal:nth-child(1) { transition-delay: 0.05s; }
+.reveal:nth-child(2) { transition-delay: 0.15s; }
+.reveal:nth-child(3) { transition-delay: 0.25s; }
+.reveal:nth-child(4) { transition-delay: 0.35s; }
+.reveal:nth-child(5) { transition-delay: 0.45s; }
+.reveal:nth-child(6) { transition-delay: 0.55s; }
+
+/* Scale in — for cards and blocks */
+.reveal-scale {
+    opacity: 0;
+    transform: scale(0.92);
+    transition: opacity var(--duration-normal) var(--ease-out-expo),
+                transform var(--duration-normal) var(--ease-out-back);
+}
+
+.slide.visible .reveal-scale {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.reveal-scale:nth-child(1) { transition-delay: 0.05s; }
+.reveal-scale:nth-child(2) { transition-delay: 0.15s; }
+.reveal-scale:nth-child(3) { transition-delay: 0.25s; }
+.reveal-scale:nth-child(4) { transition-delay: 0.35s; }
+
+/* Blur in — for dramatic text */
+.reveal-blur {
+    opacity: 0;
+    filter: blur(12px);
+    transform: translateY(10px);
+    transition: opacity var(--duration-slow) var(--ease-out-expo),
+                filter var(--duration-slow) var(--ease-out-expo),
+                transform var(--duration-slow) var(--ease-out-expo);
+}
+
+.slide.visible .reveal-blur {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+}
+
+/* Slide from left */
+.reveal-left {
+    opacity: 0;
+    transform: translateX(-40px);
+    transition: opacity var(--duration-normal) var(--ease-out-expo),
+                transform var(--duration-normal) var(--ease-out-expo);
+}
+
+.slide.visible .reveal-left {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.reveal-left:nth-child(1) { transition-delay: 0.1s; }
+.reveal-left:nth-child(2) { transition-delay: 0.2s; }
+.reveal-left:nth-child(3) { transition-delay: 0.3s; }
+
+/* ===========================================
+   ANIMATED GRADIENT BORDER
+   =========================================== */
+.gradient-border {
+    position: relative;
+    border-radius: 16px;
+    padding: 2px;
+    background: linear-gradient(135deg, var(--accent), var(--purple), var(--teal));
+    background-size: 200% 200%;
+    animation: gradient-shift 6s ease infinite;
+}
+
+.gradient-border-inner {
+    background: var(--bg-secondary);
+    border-radius: 14px;
+    padding: 2rem;
+}
+
+@keyframes gradient-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+/* ===========================================
+   RESPONSIVE
+   =========================================== */
+@media (max-width: 768px) {
+    .nav-dots {
+        display: none;
+    }
+
+    .card-grid-2,
+    .card-grid-3 {
+        grid-template-columns: 1fr;
+    }
+
+    .capability-preview {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .slide-counter {
+        bottom: 1rem;
+        left: 1rem;
+    }
+}
+
+/* ===========================================
+   REDUCED MOTION
+   =========================================== */
+@media (prefers-reduced-motion: reduce) {
+    .reveal,
+    .reveal-scale,
+    .reveal-blur,
+    .reveal-left {
+        transition: opacity 0.3s ease;
+        transform: none;
+        filter: none;
+    }
+
+    .atmosphere::before,
+    .atmosphere::after {
+        animation: none;
+    }
+
+    .gradient-border {
+        animation: none;
+    }
+}

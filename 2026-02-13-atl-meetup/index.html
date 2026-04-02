@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>From Tools to Capability — What Actually Drives AI Adoption</title>
+
+    <!-- Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Atmospheric background -->
+    <div class="atmosphere"></div>
+
+    <!-- Progress indicator -->
+    <div class="progress-indicator" id="progress"></div>
+
+    <!-- Navigation dots -->
+    <nav class="nav-dots" id="navDots" aria-label="Slide navigation"></nav>
+
+    <!-- Slide counter -->
+    <div class="slide-counter">
+        <span class="current" id="currentSlide">01</span>
+        <span>/</span>
+        <span id="totalSlides">00</span>
+    </div>
+
+    <!-- Slides Container -->
+    <main id="slides-container"></main>
+
+    <!-- Slide Loader -->
+    <script>
+        const slideFiles = [
+            'slides/01-title.html',
+            'slides/02-opening.html',
+            'slides/03-prototyping.html',
+            'slides/04-prototyping-takeaway.html',
+            'slides/05-delegation.html',
+            'slides/06-delegation-takeaway.html',
+            'slides/07-planning.html',
+            'slides/08-planning-takeaway.html',
+            'slides/09-fleet.html',
+            'slides/10-fleet-takeaway.html',
+            'slides/11-close.html'
+        ];
+
+        async function loadSlides() {
+            const container = document.getElementById('slides-container');
+
+            try {
+                const slidePromises = slideFiles.map(file =>
+                    fetch(file).then(response => {
+                        if (!response.ok) throw new Error(`Failed to load ${file}`);
+                        return response.text();
+                    })
+                );
+
+                const slideContents = await Promise.all(slidePromises);
+                container.innerHTML = slideContents.join('\n');
+
+                document.getElementById('totalSlides').textContent =
+                    String(slideFiles.length).padStart(2, '0');
+
+                initPresentation();
+            } catch (error) {
+                console.error('Error loading slides:', error);
+                container.innerHTML = `
+                    <section class="slide">
+                        <div class="slide-content" style="text-align: center;">
+                            <h2>Error Loading Slides</h2>
+                            <p style="color: var(--accent); margin: 1rem auto;">${error.message}</p>
+                            <p style="max-width: 50ch; margin: 0 auto;">
+                                This presentation requires a local server:
+                            </p>
+                            <div style="background: var(--bg-tertiary); padding: 1.5rem; border-radius: 12px; margin-top: 1.5rem; font-family: var(--font-mono); text-align: left; max-width: 400px; margin-left: auto; margin-right: auto; font-size: 0.95rem;">
+                                <p style="color: var(--text-primary); margin-bottom: 0.5rem;">npx serve</p>
+                                <p style="color: var(--text-primary);">python -m http.server 8000</p>
+                            </div>
+                        </div>
+                    </section>`;
+            }
+        }
+
+        loadSlides();
+    </script>
+
+    <!-- Presentation controller -->
+    <script src="presentation.js"></script>
+</body>
+</html>

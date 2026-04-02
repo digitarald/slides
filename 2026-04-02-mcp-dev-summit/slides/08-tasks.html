@@ -1,0 +1,118 @@
+<!-- Act II: Tasks — How tools trigger tasks -->
+<section class="slide">
+    <div class="slide-content">
+        <div class="badge badge-yellow reveal">
+            <span class="codicon codicon-tasklist" aria-hidden="true"></span>
+            ACT II &mdash; TASKS
+        </div>
+
+        <h2 class="reveal">
+            How tools trigger <span class="text-yellow">tasks</span>
+        </h2>
+
+        <p class="text-secondary reveal" style="max-width: 680px; margin-bottom: 20px;">
+            Any tool call can become a long-running task. The client opts in, the server responds immediately, and progress flows back as notifications.
+        </p>
+
+        <!-- Vertical flowchart: tool call → task lifecycle -->
+        <div style="display: flex; gap: 24px; max-width: 800px;" class="reveal delay-2">
+            <!-- Left: flowchart steps -->
+            <div style="display: flex; flex-direction: column; gap: 0; flex: 1;">
+                <!-- Step 1: Client sends tools/call with task param -->
+                <div style="display: flex; gap: 14px; align-items: stretch;">
+                    <div style="display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 28px;">
+                        <div style="width: 22px; height: 22px; border-radius: 50%; background: var(--yellow); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: var(--bg-primary);">1</div>
+                        <div style="width: 1px; flex: 1; background: var(--border);"></div>
+                    </div>
+                    <div style="padding-bottom: 12px; flex: 1;">
+                        <p style="font-size: 13px; color: var(--text-bright); font-weight: 500;">Client sends <code style="font-size: 11px;">tools/call</code> with task metadata</p>
+                        <div class="code-block" style="font-size: 10px; padding: 8px 12px; margin-top: 4px;">
+                            { <span class="property">"method"</span>: <span class="string">"tools/call"</span>, <span class="property">"params"</span>: { <span class="property">"task"</span>: { <span class="property">"ttl"</span>: <span class="number">3600000</span> } } }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Server returns task immediately -->
+                <div style="display: flex; gap: 14px; align-items: stretch;">
+                    <div style="display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 28px;">
+                        <div style="width: 22px; height: 22px; border-radius: 50%; background: var(--yellow); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: var(--bg-primary);">2</div>
+                        <div style="width: 1px; flex: 1; background: var(--border);"></div>
+                    </div>
+                    <div style="padding-bottom: 12px; flex: 1;">
+                        <p style="font-size: 13px; color: var(--text-bright); font-weight: 500;">Server returns <code style="font-size: 11px;">CreateTaskResult</code> immediately</p>
+                        <p class="text-muted" style="font-size: 12px;">Task ID assigned, status: <span class="text-accent">working</span>. Client is unblocked.</p>
+                    </div>
+                </div>
+
+                <!-- Step 3: Progress notifications flow -->
+                <div style="display: flex; gap: 14px; align-items: stretch;">
+                    <div style="display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 28px;">
+                        <div style="width: 22px; height: 22px; border-radius: 50%; background: var(--yellow); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: var(--bg-primary);">3</div>
+                        <div style="width: 1px; flex: 1; background: var(--border);"></div>
+                    </div>
+                    <div style="padding-bottom: 12px; flex: 1;">
+                        <p style="font-size: 13px; color: var(--text-bright); font-weight: 500;">Server emits <code style="font-size: 11px;">notifications/tasks/status</code></p>
+                        <p class="text-muted" style="font-size: 12px;">Real-time progress: <span class="text-secondary">"847 of 1,204 spans indexed"</span></p>
+                    </div>
+                </div>
+
+                <!-- Step 4: input_required pause -->
+                <div style="display: flex; gap: 14px; align-items: stretch;">
+                    <div style="display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 28px;">
+                        <div style="width: 22px; height: 22px; border-radius: 50%; background: var(--orange); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: var(--bg-primary);">4</div>
+                        <div style="width: 1px; flex: 1; background: var(--border);"></div>
+                    </div>
+                    <div style="padding-bottom: 12px; flex: 1;">
+                        <p style="font-size: 13px; color: var(--text-bright); font-weight: 500;">Task hits <code style="font-size: 11px; color: var(--orange); background: rgba(206,145,120,0.1); border-color: rgba(206,145,120,0.2);">input_required</code> &mdash; pauses for human</p>
+                        <p class="text-muted" style="font-size: 12px;">Decision only a human can make. Task waits, then resumes.</p>
+                    </div>
+                </div>
+
+                <!-- Step 5: Result retrieval -->
+                <div style="display: flex; gap: 14px; align-items: stretch;">
+                    <div style="display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 28px;">
+                        <div style="width: 22px; height: 22px; border-radius: 50%; background: var(--green); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: var(--bg-primary);">5</div>
+                    </div>
+                    <div style="flex: 1;">
+                        <p style="font-size: 13px; color: var(--text-bright); font-weight: 500;">Client fetches result via <code style="font-size: 11px;">tasks/result</code></p>
+                        <p class="text-muted" style="font-size: 12px;">Same tool call result format. Survives disconnects&mdash;close VS Code, come back, still running.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: state badges reference -->
+            <div style="flex: none; width: 140px; display: flex; flex-direction: column; gap: 6px; padding-top: 4px;">
+                <p class="mono text-muted" style="font-size: 10px; letter-spacing: 0.06em; margin-bottom: 4px;">STATES</p>
+                <div class="state-badge state-working" style="font-size: 11px; padding: 4px 8px;">
+                    <span class="codicon codicon-loading codicon-modifier-spin" aria-hidden="true" style="font-size: 11px;"></span>
+                    working
+                </div>
+                <div class="state-badge state-input" style="font-size: 11px; padding: 4px 8px;">
+                    <span class="codicon codicon-question" aria-hidden="true" style="font-size: 11px;"></span>
+                    input_required
+                </div>
+                <div class="state-badge state-complete" style="font-size: 11px; padding: 4px 8px;">
+                    <span class="codicon codicon-check" aria-hidden="true" style="font-size: 11px;"></span>
+                    completed
+                </div>
+                <div class="state-badge state-failed" style="font-size: 11px; padding: 4px 8px;">
+                    <span class="codicon codicon-error" aria-hidden="true" style="font-size: 11px;"></span>
+                    failed
+                </div>
+                <div class="state-badge" style="font-size: 11px; padding: 4px 8px; background: var(--bg-tertiary); color: var(--text-muted); border: 1px solid var(--border);">
+                    <span class="codicon codicon-circle-slash" aria-hidden="true" style="font-size: 11px;"></span>
+                    cancelled
+                </div>
+            </div>
+        </div>
+
+        <!-- Key insight -->
+        <div class="tip-box reveal delay-4 mt-md" style="border-left-color: var(--yellow); max-width: 800px;">
+            <p style="font-size: 14px;">
+                <span class="codicon codicon-lightbulb" aria-hidden="true" style="color: var(--yellow);"></span>
+                <strong style="color: var(--text-bright);">The state nobody builds for:</strong>
+                <span class="text-secondary"><code style="color: var(--yellow); background: rgba(220,220,170,0.08); border-color: rgba(220,220,170,0.15);">input_required</code> &mdash; the task pauses until the human decides, then resumes. That&rsquo;s not fire-and-forget, that&rsquo;s collaboration.</span>
+            </p>
+        </div>
+    </div>
+</section>

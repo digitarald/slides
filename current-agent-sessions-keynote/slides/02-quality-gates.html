@@ -1,0 +1,58 @@
+<!-- 02: Quality Gates — shown during Act 2 anxiety beat -->
+<section class="slide">
+    <div class="slide-content">
+        <span class="badge badge-teal reveal">Trust</span>
+
+        <h2 class="reveal">Quality gates for <span class="accent">agents</span></h2>
+
+        <p class="reveal" style="margin-bottom: 2rem;">
+            Not prompts. Deterministic code that executes.
+        </p>
+
+        <div style="display: flex; flex-direction: column; gap: 0.75rem; max-width: 1100px;">
+
+            <!-- Hooks -->
+            <div class="card reveal" style="display: grid; grid-template-columns: 1fr 2fr 4fr; gap: 1.5rem; align-items: center;">
+                <div>
+                    <h3 style="margin-bottom: 0;">Hooks</h3>
+                    <span class="badge badge-teal" style="font-size: 0.65rem; margin-top: 0.4rem; display: inline-block;">New</span>
+                </div>
+                <div>
+                    <span class="badge badge-teal" style="font-size: 0.7rem;">Per tool invocation · all tools</span>
+                </div>
+                <div>
+                    <p style="font-size: 0.9rem; max-width: none;">Shell scripts that fire before/after <em>every</em> tool call — file write, terminal command, MCP tool. Block, modify, or require approval. Run your linter after every edit.</p>
+                </div>
+            </div>
+
+            <!-- Terminal Sandbox -->
+            <div class="card reveal" style="display: grid; grid-template-columns: 1fr 2fr 4fr; gap: 1.5rem; align-items: center;">
+                <div>
+                    <h3 style="margin-bottom: 0;">Terminal Sandbox</h3>
+                    <span class="badge badge-orange" style="font-size: 0.65rem; margin-top: 0.4rem; display: inline-block;">Experimental</span>
+                </div>
+                <div>
+                    <span class="badge badge-purple" style="font-size: 0.7rem;">Per session · terminal only</span>
+                </div>
+                <div>
+                    <p style="font-size: 0.9rem; max-width: none;">Restricts file system to working directory, blocks all network by default. Agent commands run without manual approval because the environment is controlled.</p>
+                </div>
+            </div>
+
+            <!-- CI/CD -->
+            <div class="card reveal" style="display: grid; grid-template-columns: 1fr 2fr 4fr; gap: 1.5rem; align-items: center;">
+                <div>
+                    <h3 style="margin-bottom: 0;">CI/CD</h3>
+                </div>
+                <div>
+                    <span class="badge badge-blue" style="font-size: 0.7rem;">Per PR</span>
+                </div>
+                <div>
+                    <p style="font-size: 0.9rem; max-width: none;">Cloud sessions land as PRs. PRs force your existing quality gates — tests, linting, code review. The gates you already trust.</p>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</section>

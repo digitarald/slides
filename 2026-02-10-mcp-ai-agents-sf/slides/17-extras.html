@@ -1,0 +1,30 @@
+<!-- 17: Key server primitives (focused) -->
+<section class="slide">
+    <div class="slide-content">
+        <span class="badge badge-teal reveal">Building Blocks</span>
+
+        <h2 class="reveal">Four primitives<br>worth <span class="accent">knowing</span></h2>
+
+        <div class="grid-2" style="margin-top: 2rem;">
+            <div class="card reveal">
+                <h3>🧠 Sampling</h3>
+                <p>Servers borrow the client's LLM via <code style="color: var(--accent); font-family: var(--font-mono); font-size: 0.9em;">sampling/createMessage</code>. No API keys needed — the server orchestrates, the client's LLM reasons, the user stays in control.</p>
+            </div>
+
+            <div class="card reveal">
+                <h3>📋 Instructions</h3>
+                <p>Server returns an <code style="color: var(--accent); font-family: var(--font-mono); font-size: 0.9em;">instructions</code> string at init — a "user manual for LLMs" injected into the system prompt. The difference between tools that work and tools that work <em>well</em>.</p>
+            </div>
+
+            <div class="card reveal">
+                <h3>📂 Roots</h3>
+                <p>Clients expose workspace <code style="color: var(--accent); font-family: var(--font-mono); font-size: 0.9em;">roots</code> — directories and files the server can operate on. Scopes what the server sees, enforces least-privilege.</p>
+            </div>
+
+            <div class="card reveal">
+                <h3>🔄 Dynamic Tool Discovery</h3>
+                <p>Servers add, remove, or update tools at runtime via <code style="color: var(--accent); font-family: var(--font-mono); font-size: 0.9em;">notifications/tools/list_changed</code> — the client picks up changes without restart.</p>
+            </div>
+        </div>
+    </div>
+</section>

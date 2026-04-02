@@ -1,0 +1,34 @@
+<!-- 05: Extensions as Skill Carriers -->
+<section class="slide">
+    <div class="slide-content">
+        <h2 class="reveal">
+            Extensions as<br><span class="accent">skill carriers</span>
+        </h2>
+
+        <div class="two-col" style="margin-top: 2rem;">
+            <div class="reveal-left">
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="file-name">package.json</span>
+                    </div>
+                    <pre><code>{
+  "contributes": {
+    <span style="color: var(--accent);">"chatSkills"</span>: [{
+      "name": "deploy-azure",
+      "folder": "./skills/deploy"
+    }]
+  }
+}</code></pre>
+                </div>
+            </div>
+
+            <div class="reveal-right">
+                <ul class="feature-list" style="font-size: 1.1rem;">
+                    <li><strong>Static</strong> — bundle SKILL.md in extensions</li>
+                    <li><strong class="accent-purple">Dynamic</strong> — <code style="font-family: var(--font-mono); color: var(--accent-purple);">registerSkillProvider</code> <span class="badge badge-purple">Proposed</span></li>
+                    <li>Shipping: Azure, .NET, Context7</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>

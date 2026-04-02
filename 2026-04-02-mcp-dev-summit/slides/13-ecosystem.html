@@ -1,0 +1,71 @@
+<!-- Ecosystem & Distribution -->
+<section class="slide">
+    <div class="slide-content">
+        <h2 class="reveal">
+            Already an ecosystem
+        </h2>
+
+        <p class="text-secondary reveal" style="max-width: 650px; margin-bottom: 20px;">
+            MCP Apps aren't a proposal&mdash;companies are shipping them. And distribution is built into the platform.
+        </p>
+
+        <div class="grid-3 reveal delay-2" style="margin-bottom: 20px;">
+            <div class="card" style="text-align: center; padding: 14px;">
+                <p style="font-size: 22px; margin-bottom: 4px;">
+                    <span class="codicon codicon-symbol-color" aria-hidden="true" style="color: var(--purple);"></span>
+                </p>
+                <p style="font-size: 13px; color: var(--text-bright); font-weight: 500;">Storybook</p>
+                <p class="text-muted" style="font-size: 11px;">Component previews</p>
+            </div>
+            <div class="card" style="text-align: center; padding: 14px;">
+                <p style="font-size: 22px; margin-bottom: 4px;">
+                    <span class="codicon codicon-symbol-ruler" aria-hidden="true" style="color: var(--orange);"></span>
+                </p>
+                <p style="font-size: 13px; color: var(--text-bright); font-weight: 500;">Figma</p>
+                <p class="text-muted" style="font-size: 11px;">Design tokens</p>
+            </div>
+            <div class="card" style="text-align: center; padding: 14px;">
+                <p style="font-size: 22px; margin-bottom: 4px;">
+                    <span class="codicon codicon-graph text-green" aria-hidden="true"></span>
+                </p>
+                <p style="font-size: 13px; color: var(--text-bright); font-weight: 500;">Amplitude</p>
+                <p class="text-muted" style="font-size: 11px;">Analytics</p>
+            </div>
+            <div class="card" style="text-align: center; padding: 14px;">
+                <p style="font-size: 22px; margin-bottom: 4px;">
+                    <span class="codicon codicon-edit" aria-hidden="true" style="color: var(--green-bright);"></span>
+                </p>
+                <p style="font-size: 13px; color: var(--text-bright); font-weight: 500;">tldraw</p>
+                <p class="text-muted" style="font-size: 11px;">Whiteboarding</p>
+            </div>
+            <div class="card" style="text-align: center; padding: 14px;">
+                <p style="font-size: 22px; margin-bottom: 4px;">
+                    <span class="codicon codicon-paintcan" aria-hidden="true" style="color: var(--cyan);"></span>
+                </p>
+                <p style="font-size: 13px; color: var(--text-bright); font-weight: 500;">Excalidraw</p>
+                <p class="text-muted" style="font-size: 11px;">Diagrams</p>
+            </div>
+            <div class="card" style="text-align: center; padding: 14px;">
+                <p style="font-size: 22px; margin-bottom: 4px;">
+                    <span class="codicon codicon-symbol-color text-yellow" aria-hidden="true"></span>
+                </p>
+                <p style="font-size: 13px; color: var(--text-bright); font-weight: 500;">Canva</p>
+                <p class="text-muted" style="font-size: 11px;">Design</p>
+            </div>
+        </div>
+
+        <!-- Distribution callout -->
+        <div class="card reveal delay-3" style="max-width: 750px; padding: 14px 16px;">
+            <div class="flex-row gap-sm" style="margin-bottom: 8px;">
+                <span class="codicon codicon-extensions text-accent" aria-hidden="true" style="font-size: 18px;"></span>
+                <h3 style="margin: 0; font-size: 16px;">Zero-config distribution</h3>
+            </div>
+            <div class="code-block" style="font-size: 11px; padding: 8px 12px;">
+                <span class="property">vscode</span>.<span class="property">lm</span>.<span class="function">registerMcpServerDefinitionProvider</span>(<span class="string">'storybook'</span>, { <span class="function">provideMcpServerDefinitions</span>: <span class="keyword">async</span> () =&gt; [<span class="keyword">new</span> <span class="type">McpStdioServerDefinition</span>({ <span class="property">label</span>: <span class="string">'Storybook'</span>, ... })] })
+            </div>
+            <p class="text-muted" style="font-size: 11px; margin-top: 6px;">
+                Install the extension &mdash; auto-discovery, settings sync, no manual config.
+            </p>
+        </div>
+    </div>
+</section>

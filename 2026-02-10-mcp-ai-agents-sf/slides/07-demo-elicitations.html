@@ -1,0 +1,49 @@
+<!-- 07: Demo Cover — URL Elicitations -->
+<section class="slide demo-slide">
+    <div class="slide-content">
+        <div class="demo-badge reveal">Live Demo</div>
+
+        <h2 class="reveal">URL Elicitations<br><span class="accent">secure auth handoff</span></h2>
+
+        <p class="reveal">
+            Watch an MCP server redirect the user to an OAuth flow — credentials never touch the agent. The latest spec addition in action.
+        </p>
+
+        <ul class="demo-checklist reveal">
+            <li>Server triggers URL elicitation for OAuth</li>
+            <li>User completes auth in browser, token flows back</li>
+            <li>Continues into long-running task with progress</li>
+        </ul>
+
+        <div class="mock-demo-flow reveal" style="margin-top: 2rem; max-width: 700px;">
+            <div class="mock-flow-step">
+                <div class="mock-flow-icon">🤖</div>
+                <div class="mock-flow-label">Agent calls<br><code>connect_salesforce</code></div>
+            </div>
+            <div class="mock-flow-connector">
+                <span class="mock-flow-line"></span>
+                <span class="mock-flow-arrow">→</span>
+            </div>
+            <div class="mock-flow-step highlight">
+                <div class="mock-flow-icon">🔗</div>
+                <div class="mock-flow-label">URL elicitation<br><code>login.salesforce.com</code></div>
+            </div>
+            <div class="mock-flow-connector">
+                <span class="mock-flow-line"></span>
+                <span class="mock-flow-arrow">→</span>
+            </div>
+            <div class="mock-flow-step">
+                <div class="mock-flow-icon">🔐</div>
+                <div class="mock-flow-label">User completes<br>OAuth in browser</div>
+            </div>
+            <div class="mock-flow-connector">
+                <span class="mock-flow-line"></span>
+                <span class="mock-flow-arrow">→</span>
+            </div>
+            <div class="mock-flow-step">
+                <div class="mock-flow-icon">✅</div>
+                <div class="mock-flow-label">Scoped token<br>returned to server</div>
+            </div>
+        </div>
+    </div>
+</section>

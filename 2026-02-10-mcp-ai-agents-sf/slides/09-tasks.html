@@ -1,0 +1,61 @@
+<!-- 09: Tasks deep dive -->
+<section class="slide">
+    <div class="slide-content">
+        <span class="badge badge-blue reveal">Tasks</span>
+
+        <h2 class="reveal">This is where agents<br>usually <span class="accent-blue">lie</span></h2>
+
+        <p class="reveal" style="margin-bottom: 1rem;">
+            Async tasks are the primitive for "I'll work on this and get back to you" — with progress and partial failure handling.
+        </p>
+
+        <div class="two-col" style="margin-top: 0.5rem;">
+            <div class="reveal-left">
+                <p class="quote" style="margin-bottom: 1.5rem;">
+                    "They act like a multi-minute job is instant. Tasks let the UI represent time honestly."
+                </p>
+
+                <ul class="feature-list">
+                    <li>Indexing a monorepo</li>
+                    <li>Running a benchmark suite</li>
+                    <li>Waiting on a remote API</li>
+                </ul>
+
+                <p style="margin-top: 1.5rem;">MCP tools emit numeric progress <span class="accent">"3 of 12 files indexed"</span> — VS Code surfaces it live in the UI.</p>
+            </div>
+
+            <div class="reveal-right">
+                <!-- CSS mock-up: VS Code task progress -->
+                <div class="mock-chat-panel">
+                    <div class="mock-chat-message">
+                        <div class="mock-chat-avatar">🤖</div>
+                        <div class="mock-chat-body">
+                            <p class="mock-chat-text">Indexing the monorepo for type analysis…</p>
+                            <div class="mock-task-progress">
+                                <div class="mock-task-header">
+                                    <span class="mock-task-icon">⏳</span>
+                                    <span class="mock-task-name">index-codebase</span>
+                                    <span class="mock-task-status">Running</span>
+                                </div>
+                                <div class="mock-progress-bar">
+                                    <div class="mock-progress-fill" style="width: 25%;"></div>
+                                </div>
+                                <div class="mock-progress-label">3 of 12 files indexed</div>
+                            </div>
+                            <div class="mock-task-progress" style="opacity: 0.5; margin-top: 0.5rem;">
+                                <div class="mock-task-header">
+                                    <span class="mock-task-icon">✅</span>
+                                    <span class="mock-task-name">resolve-deps</span>
+                                    <span class="mock-task-status done">Complete</span>
+                                </div>
+                                <div class="mock-progress-bar">
+                                    <div class="mock-progress-fill" style="width: 100%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

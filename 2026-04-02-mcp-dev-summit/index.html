@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Human in the Loop, Agent in the Flow — MCP Dev Summit 2026</title>
+
+    <!-- Source Code Pro (mono) + Codicons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600&display=swap">
+    <link rel="stylesheet" href="https://unpkg.com/@vscode/codicons/dist/codicon.css">
+
+    <!-- Theme -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Progress bar -->
+    <div class="progress-indicator" id="progress"></div>
+
+    <!-- Navigation dots -->
+    <nav class="nav-dots" id="navDots" aria-label="Slide navigation"></nav>
+
+    <!-- Slide counter -->
+    <div class="slide-counter">
+        <span class="current" id="currentSlide">01</span>
+        <span class="text-faint">/</span>
+        <span id="totalSlides">00</span>
+    </div>
+
+    <!-- Slides container — populated dynamically -->
+    <main id="slides-container"></main>
+
+    <!-- Talktrack overlay (presenter notes — toggle with T, close with Esc) -->
+    <aside id="talktrack" class="talktrack" aria-label="Speaker notes" hidden>
+        <div class="talktrack-header">
+            <span class="talktrack-badge" id="talktrackCue"></span>
+            <button id="talktrackClose" class="talktrack-close" aria-label="Close speaker notes">
+                <i class="codicon codicon-close"></i>
+            </button>
+        </div>
+        <h3 class="talktrack-title" id="talktrackTitle"></h3>
+        <p class="talktrack-notes" id="talktrackNotes"></p>
+        <div class="talktrack-footer">
+            <span id="talktrackSlide" class="talktrack-slide-ref"></span>
+            <span class="talktrack-hint">T toggle · Esc close</span>
+        </div>
+    </aside>
+
+    <!-- Slide loader -->
+    <script>
+        /* ===========================================
+           SLIDE LOADER
+           Fetches individual slide HTML files and
+           injects them into the container in order.
+           =========================================== */
+        const slideFiles = [
+            'slides/01-title.html',
+            'slides/02-problem.html',
+            'slides/03-missing-middle.html',
+            'slides/04-elicitations-intro.html',
+            'slides/05-elicitation-patterns.html',
+            'slides/06-elicitation-flow.html',
+            'slides/07-bridge-tasks.html',
+            'slides/08-tasks.html',
+            'slides/09-tasks-progress.html',
+            'slides/10-bridge-apps.html',
+            'slides/11-mcp-apps.html',
+            'slides/12-mcp-apps-flow.html',
+            'slides/13-ecosystem.html',
+            'slides/14-bash-callback.html',
+            'slides/15-tips-harald.html',
+            'slides/16-tips-connor.html',
+            'slides/17-closing.html',
+        ];
+
+        async function loadSlides() {
+            const container = document.getElementById('slides-container');
+
+            const slidePromises = slideFiles.map(file =>
+                fetch(file).then(response => {
+                    if (!response.ok) throw new Error(`Failed to load ${file}`);
+                    return response.text();
+                })
+            );
+
+            /* Load talktrack in parallel — graceful fallback if missing */
+            const talktrackPromise = fetch('talktrack.json')
+                .then(r => r.ok ? r.json() : [])
+                .catch(() => []);
+
+            try {
+                const [slideContents, talktrackData] = await Promise.all([
+                    Promise.all(slidePromises),
+                    talktrackPromise,
+                ]);
+                container.innerHTML = slideContents.join('\n');
+
+                document.getElementById('totalSlides').textContent =
+                    String(slideFiles.length).padStart(2, '0');
+
+                /* Animate the task progress bar on slide 9 */
+                animateTaskProgress();
+
+                /* Init presentation controller with talktrack data */
+                new SlidePresentation(talktrackData);
+            } catch (error) {
+                console.error('Error loading slides:', error);
+                container.innerHTML = `
+                    <section class="slide" style="align-items: center; text-align: center;">
+                        <div class="slide-content">
+                            <h2 style="color: var(--red);">Error Loading Slides</h2>
+                            <p class="text-secondary" style="margin-top: 16px;">${error.message}</p>
+                            <p class="text-muted" style="margin-top: 12px;">
+                                Serve this folder via <code>npx serve</code> or <code>python -m http.server</code>
+                            </p>
+                        </div>
+                    </section>
+                `;
+            }
+        }
+
+        /* Animate the fake progress bar on the tasks slide */
+        function animateTaskProgress() {
+            const bar = document.getElementById('taskProgress');
+            if (!bar) return;
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        let width = 0;
+                        const interval = setInterval(() => {
+                            width += Math.random() * 8;
+                            if (width >= 70) { clearInterval(interval); width = 70; }
+                            bar.style.width = width + '%';
+                        }, 200);
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            observer.observe(bar.closest('.slide'));
+        }
+
+        document.addEventListener('DOMContentLoaded', loadSlides);
+    </script>
+
+    <!-- Presentation controller -->
+    <script src="presentation.js"></script>
+</body>
+</html>

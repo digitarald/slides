@@ -1,0 +1,68 @@
+<!-- Elicitation Protocol Flow -->
+<section class="slide">
+    <div class="slide-content">
+        <h2 class="reveal">How elicitations flow</h2>
+        <p class="text-secondary reveal" style="margin-bottom: 32px;">
+            Nested within tool execution. Server pauses, client handles UI, user responds, workflow resumes.
+        </p>
+
+        <!-- Visual flow diagram -->
+        <div class="reveal delay-2" style="display: flex; flex-direction: column; gap: 0; max-width: 800px;">
+            <!-- Step 1 -->
+            <div style="display: flex; align-items: center; gap: 16px; padding: 16px 0;">
+                <div class="state-badge state-working" style="min-width: 80px; justify-content: center;">
+                    <span class="codicon codicon-server" aria-hidden="true"></span>
+                    Server
+                </div>
+                <div style="flex: 1; height: 1px; background: var(--border); position: relative;">
+                    <span class="codicon codicon-arrow-right" aria-hidden="true" style="position: absolute; right: -4px; top: -8px; color: var(--blue-light);"></span>
+                </div>
+                <div style="flex: none; background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: 6px; padding: 10px 16px; max-width: 380px;">
+                    <p class="mono text-muted" style="font-size: 11px; margin-bottom: 4px;">elicitation/create</p>
+                    <p style="font-size: 13px; color: var(--text-primary);">
+                        <span class="text-green">"Please authenticate."</span> + JSON Schema for form fields
+                    </p>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div style="display: flex; align-items: center; gap: 16px; padding: 16px 0;">
+                <div style="min-width: 80px;"></div>
+                <div style="flex: 1; text-align: center;">
+                    <div style="display: inline-flex; align-items: center; gap: 8px; background: var(--accent-glow); border: 1px solid rgba(55,148,255,0.3); border-radius: 6px; padding: 10px 20px;">
+                        <span class="codicon codicon-account text-accent" aria-hidden="true" style="font-size: 20px;"></span>
+                        <div style="text-align: left;">
+                            <p class="mono text-accent" style="font-size: 11px;">USER INTERACTION</p>
+                            <p style="font-size: 13px; color: var(--text-bright);">Client renders form &mdash; user fills &amp; submits</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div style="display: flex; align-items: center; gap: 16px; padding: 16px 0;">
+                <div style="flex: none; background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: 6px; padding: 10px 16px; max-width: 380px;">
+                    <p class="mono text-muted" style="font-size: 11px; margin-bottom: 4px;">result</p>
+                    <p style="font-size: 13px; color: var(--text-primary);">
+                        <span class="text-orange">action: "accept"</span>, content: { username: "..." }
+                    </p>
+                </div>
+                <div style="flex: 1; height: 1px; background: var(--border); position: relative;">
+                    <span class="codicon codicon-arrow-right" aria-hidden="true" style="position: absolute; right: -4px; top: -8px; color: var(--green);"></span>
+                </div>
+                <div class="state-badge state-complete" style="min-width: 80px; justify-content: center;">
+                    <span class="codicon codicon-server" aria-hidden="true"></span>
+                    Resume
+                </div>
+            </div>
+        </div>
+
+        <div class="tip-box reveal delay-4 mt-lg" style="max-width: 700px;">
+            <p style="font-size: 14px;">
+                <span class="codicon codicon-key text-yellow" aria-hidden="true"></span>
+                <strong style="color: var(--text-bright);">URL mode:</strong>
+                <span class="text-secondary">Same flow, but the client opens a browser for OAuth/SSO. Credentials go directly to the provider&mdash;the MCP client and model never see them.</span>
+            </p>
+        </div>
+    </div>
+</section>

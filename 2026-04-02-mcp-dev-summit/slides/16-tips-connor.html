@@ -1,0 +1,36 @@
+<!-- Wrap-up: Connor's Tips -->
+<section class="slide">
+    <div class="slide-content">
+        <h2 class="reveal">Building &amp; debugging tips</h2>
+        <p class="text-muted reveal" style="font-size: 14px; margin-bottom: 12px;">Connor</p>
+
+        <div class="flex-col gap-sm">
+            <div class="tip-box reveal" style="border-left-color: var(--orange); padding: 10px 14px;">
+                <p class="tip-number">TIP 01</p>
+                <h3 style="margin-bottom: 4px; font-size: 16px;">MCP dev mode</h3>
+                <p class="text-secondary" style="font-size: 13px;">
+                    Protocol logs, file-watch restart, debugger attach. Most agent bugs are server bugs&mdash;make behavior observable.
+                </p>
+            </div>
+
+            <div class="tip-box reveal" style="border-left-color: var(--green); padding: 10px 14px;">
+                <p class="tip-number">TIP 02</p>
+                <h3 style="margin-bottom: 4px; font-size: 16px;">Enable tools dynamically</h3>
+                <p class="text-secondary" style="font-size: 13px; margin-bottom: 6px;">
+                    Don't show tools the user can't use. Token scope determines visibility.
+                </p>
+                <div class="code-block" style="font-size: 11px; padding: 6px 10px;">
+                    <span class="keyword">if</span> (<span class="property">scope</span>.<span class="function">includes</span>(<span class="string">'repo'</span>)) <span class="function">enableTool</span>(<span class="string">'create_pr'</span>);
+                </div>
+            </div>
+
+            <div class="tip-box reveal" style="border-left-color: var(--cyan); padding: 10px 14px;">
+                <p class="tip-number">TIP 03</p>
+                <h3 style="margin-bottom: 4px; font-size: 16px;">Use roots for scoping</h3>
+                <p class="text-secondary" style="font-size: 13px;">
+                    Declare <code>file://</code> URIs as boundaries. A server pointed at <code>/repos/backend</code> shouldn't index your docs folder.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>

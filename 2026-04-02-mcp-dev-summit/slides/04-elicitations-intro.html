@@ -1,0 +1,79 @@
+<!-- Act I: Elicitations — Structured Input -->
+<section class="slide">
+    <div class="slide-content">
+        <div class="badge badge-green reveal">
+            <span class="codicon codicon-symbol-interface" aria-hidden="true"></span>
+            ACT I &mdash; ELICITATIONS
+        </div>
+
+        <h2 class="reveal">
+            The missing middle for <span class="text-green">input</span>
+        </h2>
+
+        <p class="text-large text-secondary reveal" style="max-width: 700px; margin-bottom: 40px;">
+            Today it's "type more text." Elicitations give servers structured ways to ask&mdash;forms, selections, auth redirects&mdash;without the model mediating.
+        </p>
+
+        <div class="compare reveal delay-3">
+            <div class="compare-col">
+                <div class="compare-header text-green">
+                    <span class="codicon codicon-symbol-interface" aria-hidden="true"></span>
+                    Form elicitation (in-band)
+                </div>
+                <div class="icon-list">
+                    <div class="icon-feature">
+                        <span class="codicon codicon-edit text-green" aria-hidden="true"></span>
+                        <div>
+                            <p style="font-size: 14px; color: var(--text-bright);">Structured input rendered inline</p>
+                            <p style="font-size: 13px;" class="text-muted">Text fields, select dropdowns, booleans</p>
+                        </div>
+                    </div>
+                    <div class="icon-feature">
+                        <span class="codicon codicon-json text-green" aria-hidden="true"></span>
+                        <div>
+                            <p style="font-size: 14px; color: var(--text-bright);">JSON Schema validated</p>
+                            <p style="font-size: 13px;" class="text-muted">Server defines schema, client renders the form</p>
+                        </div>
+                    </div>
+                    <div class="icon-feature">
+                        <span class="codicon codicon-eye-closed text-green" aria-hidden="true"></span>
+                        <div>
+                            <p style="font-size: 14px; color: var(--text-bright);">Agent never sees raw input</p>
+                            <p style="font-size: 13px;" class="text-muted">Server asks, user answers, model stays out</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="compare-col">
+                <div class="compare-header text-yellow">
+                    <span class="codicon codicon-link-external" aria-hidden="true"></span>
+                    URL elicitation (out-of-band)
+                </div>
+                <div class="icon-list">
+                    <div class="icon-feature">
+                        <span class="codicon codicon-lock text-yellow" aria-hidden="true"></span>
+                        <div>
+                            <p style="font-size: 14px; color: var(--text-bright);">Redirects to external flow</p>
+                            <p style="font-size: 13px;" class="text-muted">OAuth, SSO, payment, MFA</p>
+                        </div>
+                    </div>
+                    <div class="icon-feature">
+                        <span class="codicon codicon-shield text-yellow" aria-hidden="true"></span>
+                        <div>
+                            <p style="font-size: 14px; color: var(--text-bright);">Credentials never touch the client</p>
+                            <p style="font-size: 13px;" class="text-muted">Token exchange happens server-side</p>
+                        </div>
+                    </div>
+                    <div class="icon-feature">
+                        <span class="codicon codicon-verified-filled text-yellow" aria-hidden="true"></span>
+                        <div>
+                            <p style="font-size: 14px; color: var(--text-bright);">HTTPS-only, SSRF-safe</p>
+                            <p style="font-size: 13px;" class="text-muted">Client validates URL before opening</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

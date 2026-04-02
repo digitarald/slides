@@ -1,0 +1,82 @@
+<!-- Elicitation Patterns — Setup Flow via External Service -->
+<section class="slide bg-dots">
+    <div class="slide-content">
+        <h2 class="reveal">Setup flow via <span class="text-green">external service</span></h2>
+
+        <!-- Hero: setup flow narrative -->
+        <div class="reveal delay-2" style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px; max-width: 750px;">
+            <div style="display: flex; align-items: center; gap: 10px; background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 12px 18px; flex: 1;">
+                <span class="codicon codicon-server text-accent" aria-hidden="true" style="font-size: 20px;"></span>
+                <div>
+                    <p class="mono text-muted" style="font-size: 10px;">MCP SERVER</p>
+                    <p style="font-size: 13px; color: var(--text-bright);">Needs external service</p>
+                </div>
+            </div>
+            <span class="codicon codicon-arrow-right text-green" aria-hidden="true" style="font-size: 18px;"></span>
+            <div style="display: flex; align-items: center; gap: 10px; background: var(--accent-glow); border: 1px solid rgba(55,148,255,0.3); border-radius: 8px; padding: 12px 18px; flex: 1;">
+                <span class="codicon codicon-account text-accent" aria-hidden="true" style="font-size: 20px;"></span>
+                <div>
+                    <p class="mono text-muted" style="font-size: 10px;">ELICITATION</p>
+                    <p style="font-size: 13px; color: var(--text-bright);">Config + Auth</p>
+                </div>
+            </div>
+            <span class="codicon codicon-arrow-right text-green" aria-hidden="true" style="font-size: 18px;"></span>
+            <div style="display: flex; align-items: center; gap: 10px; background: rgba(78,201,176,0.1); border: 1px solid rgba(78,201,176,0.25); border-radius: 8px; padding: 12px 18px; flex: 1;">
+                <span class="codicon codicon-check text-green" aria-hidden="true" style="font-size: 20px;"></span>
+                <div>
+                    <p class="mono text-muted" style="font-size: 10px;">CONNECTED</p>
+                    <p style="font-size: 13px; color: var(--text-bright);">Ready to work</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Four patterns as supporting cards -->
+        <p class="mono text-muted reveal" style="font-size: 11px; letter-spacing: 0.06em; margin-bottom: 10px;">FOUR PATTERNS</p>
+        <div class="grid-2" style="gap: 10px;">
+            <div class="card reveal" style="padding: 12px 14px;">
+                <div class="flex-row gap-sm" style="margin-bottom: 4px;">
+                    <span class="codicon codicon-gear text-green" aria-hidden="true" style="font-size: 16px;"></span>
+                    <h3 style="margin: 0; font-size: 14px;">Configuration</h3>
+                </div>
+                <p class="text-secondary" style="font-size: 12px;">
+                    Gather settings at connection time. Agent proposes defaults.
+                </p>
+            </div>
+
+            <div class="card reveal" style="padding: 12px 14px;">
+                <div class="flex-row gap-sm" style="margin-bottom: 4px;">
+                    <span class="codicon codicon-check text-green" aria-hidden="true" style="font-size: 16px;"></span>
+                    <h3 style="margin: 0; font-size: 14px;">Confirmation</h3>
+                </div>
+                <p class="text-secondary" style="font-size: 12px;">
+                    Gate destructive actions. One hallucination from dropping prod.
+                </p>
+            </div>
+
+            <div class="card reveal" style="padding: 12px 14px;">
+                <div class="flex-row gap-sm" style="margin-bottom: 4px;">
+                    <span class="codicon codicon-list-selection text-green" aria-hidden="true" style="font-size: 16px;"></span>
+                    <h3 style="margin: 0; font-size: 14px;">Selection</h3>
+                </div>
+                <p class="text-secondary" style="font-size: 12px;">
+                    Enums, not guesses. Disambiguate when the model isn&rsquo;t sure.
+                </p>
+            </div>
+
+            <div class="card reveal" style="padding: 12px 14px;">
+                <div class="flex-row gap-sm" style="margin-bottom: 4px;">
+                    <span class="codicon codicon-lock text-yellow" aria-hidden="true" style="font-size: 16px;"></span>
+                    <h3 style="margin: 0; font-size: 14px;">Auth Handoff</h3>
+                </div>
+                <p class="text-secondary" style="font-size: 12px;">
+                    URL mode &rarr; OAuth/SSO. Token exchange server-side. Agent never sees credentials.
+                </p>
+            </div>
+        </div>
+
+        <p class="text-muted reveal mt-sm" style="font-size: 13px;">
+            <span class="codicon codicon-rocket text-green" aria-hidden="true"></span>
+            Already in production: Okta, Claude Code, VS Code. Not spec fiction.
+        </p>
+    </div>
+</section>

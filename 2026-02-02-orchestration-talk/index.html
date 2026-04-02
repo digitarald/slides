@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orchestrating AI — Session Grounding</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg-deep: #08090c;
+      --bg-primary: #0d1117;
+      --bg-elevated: #151b24;
+      --bg-card: #1a2130;
+      --border: #262f3d;
+      --border-bright: #3d4a5c;
+      --text-primary: #e2e8f0;
+      --text-secondary: #8892a4;
+      --text-muted: #5c6678;
+      --accent-blue: #60a5fa;
+      --accent-purple: #a78bfa;
+      --accent-emerald: #34d399;
+      --accent-amber: #fbbf24;
+      --accent-rose: #fb7185;
+      --accent-cyan: #22d3ee;
+      --glow-blue: rgba(96, 165, 250, 0.15);
+      --glow-purple: rgba(167, 139, 250, 0.12);
+      --glow-emerald: rgba(52, 211, 153, 0.12);
+      --font-display: 'DM Serif Display', Georgia, serif;
+      --font-body: 'Outfit', -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Noise texture overlay ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 256px;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ── Progress bar ── */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple), var(--accent-emerald));
+      z-index: 1000;
+      transition: width 60ms ease-out;
+      border-radius: 0 2px 2px 0;
+    }
+
+    /* ── Navigation dots ── */
+    .nav-dots {
+      position: fixed;
+      right: 28px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      z-index: 100;
+    }
+
+    .nav-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--border);
+      border: none;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+      position: relative;
+    }
+
+    .nav-dot.active {
+      background: var(--accent-blue);
+      box-shadow: 0 0 12px var(--glow-blue);
+      transform: scale(1.3);
+    }
+
+    .nav-dot .tooltip {
+      position: absolute;
+      right: 24px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+
+    .nav-dot:hover .tooltip { opacity: 1; }
+
+    /* ── Scroll-reveal system ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+    .reveal-delay-5 { transition-delay: 0.5s; }
+
+    /* ── Hero ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 80px 60px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -20%;
+      right: -10%;
+      width: 70vw;
+      height: 70vw;
+      background: radial-gradient(circle, var(--glow-purple) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -30%;
+      left: -15%;
+      width: 60vw;
+      height: 60vw;
+      background: radial-gradient(circle, var(--glow-blue) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .hero-label {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent-blue);
+      margin-bottom: 24px;
+      position: relative;
+    }
+
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(48px, 7vw, 96px);
+      line-height: 1.05;
+      font-weight: 400;
+      max-width: 900px;
+      position: relative;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: 20px;
+      font-weight: 300;
+      color: var(--text-secondary);
+      max-width: 640px;
+      margin-top: 32px;
+      line-height: 1.6;
+      position: relative;
+    }
+
+    .hero-meta {
+      display: flex;
+      gap: 32px;
+      margin-top: 48px;
+      position: relative;
+    }
+
+    .hero-meta-item {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .hero-meta-item span {
+      color: var(--accent-blue);
+    }
+
+    /* ── Sections ── */
+    .section {
+      padding: 120px 60px;
+      position: relative;
+    }
+
+    .section + .section {
+      border-top: 1px solid var(--border);
+    }
+
+    .section-number {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--text-muted);
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+    }
+
+    .section-question {
+      font-family: var(--font-display);
+      font-size: clamp(32px, 4vw, 52px);
+      line-height: 1.15;
+      max-width: 780px;
+      margin-bottom: 16px;
+    }
+
+    .section-question em {
+      font-style: italic;
+    }
+
+    /* ── Research quote callout ── */
+    .research-quote {
+      max-width: 680px;
+      margin: 32px 0 56px;
+      padding: 24px 32px;
+      border-left: 3px solid var(--accent-purple);
+      background: linear-gradient(135deg, rgba(167, 139, 250, 0.06) 0%, transparent 80%);
+      border-radius: 0 12px 12px 0;
+    }
+
+    .research-quote blockquote {
+      font-size: 17px;
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.7;
+      color: var(--text-primary);
+    }
+
+    .research-quote cite {
+      display: block;
+      font-style: normal;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 12px;
+      font-family: var(--font-mono);
+    }
+
+    /* ── Content grid ── */
+    .content-area {
+      max-width: 1200px;
+    }
+
+    .talking-points {
+      display: grid;
+      gap: 20px;
+      margin-bottom: 56px;
+    }
+
+    .talking-point {
+      display: grid;
+      grid-template-columns: 4px 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .tp-accent {
+      width: 4px;
+      height: 100%;
+      min-height: 24px;
+      border-radius: 2px;
+      margin-top: 4px;
+    }
+
+    .tp-text {
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+    }
+
+    .tp-text strong {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .tp-text em {
+      color: var(--accent-purple);
+      font-style: normal;
+      font-weight: 500;
+    }
+
+    /* ── Feature cards ── */
+    .features-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      border-radius: 12px 12px 0 0;
+    }
+
+    .feature-card:hover {
+      border-color: var(--border-bright);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .feature-card .fc-name {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .feature-card .fc-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* ── Section color theming ── */
+    .section--context .section-question em { color: var(--accent-blue); }
+    .section--context .tp-accent { background: var(--accent-blue); }
+    .section--context .feature-card::before { background: var(--accent-blue); }
+    .section--context .feature-card .fc-name { color: var(--accent-blue); }
+
+    .section--memory .section-question em { color: var(--accent-purple); }
+    .section--memory .tp-accent { background: var(--accent-purple); }
+    .section--memory .feature-card::before { background: var(--accent-purple); }
+    .section--memory .feature-card .fc-name { color: var(--accent-purple); }
+
+    .section--parallel .section-question em { color: var(--accent-emerald); }
+    .section--parallel .tp-accent { background: var(--accent-emerald); }
+    .section--parallel .feature-card::before { background: var(--accent-emerald); }
+    .section--parallel .feature-card .fc-name { color: var(--accent-emerald); }
+
+    .section--trust .section-question em { color: var(--accent-amber); }
+    .section--trust .tp-accent { background: var(--accent-amber); }
+    .section--trust .feature-card::before { background: var(--accent-amber); }
+    .section--trust .feature-card .fc-name { color: var(--accent-amber); }
+
+    /* ── See-also collapsed ── */
+    .see-also {
+      margin-top: 8px;
+    }
+
+    .see-also-toggle {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-muted);
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .see-also-toggle:hover {
+      color: var(--text-secondary);
+      border-color: var(--border-bright);
+    }
+
+    .see-also-toggle .arrow {
+      transition: transform 0.3s;
+      display: inline-block;
+      font-size: 10px;
+    }
+
+    .see-also.open .see-also-toggle .arrow {
+      transform: rotate(90deg);
+    }
+
+    .see-also-items {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+                  margin-top 0.3s;
+    }
+
+    .see-also.open .see-also-items {
+      max-height: 300px;
+      margin-top: 16px;
+    }
+
+    .see-also-item {
+      display: flex;
+      align-items: start;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--text-muted);
+      padding: 10px 14px;
+      background: var(--bg-elevated);
+      border-radius: 8px;
+      border: 1px solid transparent;
+    }
+
+    .see-also-item .sa-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 5px;
+    }
+
+    /* ── Layered diagram (Section 2) ── */
+    .layers-diagram {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-width: 600px;
+      margin: 40px 0;
+    }
+
+    .layer-row {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .layer-label {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 10px 16px;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .layer-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .layer-label.l-instructions {
+      background: rgba(96, 165, 250, 0.12);
+      border: 1px solid rgba(96, 165, 250, 0.3);
+      color: var(--accent-blue);
+    }
+
+    .layer-label.l-skills {
+      background: rgba(167, 139, 250, 0.12);
+      border: 1px solid rgba(167, 139, 250, 0.3);
+      color: var(--accent-purple);
+    }
+
+    .layer-label.l-agents {
+      background: rgba(52, 211, 153, 0.12);
+      border: 1px solid rgba(52, 211, 153, 0.3);
+      color: var(--accent-emerald);
+    }
+
+    .layer-label.l-memory {
+      background: rgba(251, 191, 36, 0.12);
+      border: 1px solid rgba(251, 191, 36, 0.3);
+      color: var(--accent-amber);
+    }
+
+    .layer-label.l-hooks {
+      background: rgba(251, 113, 133, 0.12);
+      border: 1px solid rgba(251, 113, 133, 0.3);
+      color: var(--accent-rose);
+    }
+
+    /* ── Agent types diagram (Section 3) ── */
+    .agent-types {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      max-width: 900px;
+      margin: 40px 0;
+    }
+
+    .agent-type-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px;
+      position: relative;
+    }
+
+    .agent-type-card .atc-icon {
+      font-size: 28px;
+      margin-bottom: 16px;
+    }
+
+    .agent-type-card .atc-name {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--accent-emerald);
+    }
+
+    .agent-type-card .atc-when {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .agent-type-card .atc-trait {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      padding: 6px 10px;
+      background: var(--bg-elevated);
+      border-radius: 6px;
+      display: inline-block;
+    }
+
+    /* ── Trust layers (Section 4) ── */
+    .trust-stack {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      max-width: 960px;
+      margin: 40px 0;
+    }
+
+    .trust-layer {
+      background: var(--bg-card);
+      border-radius: 14px;
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .trust-layer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+    }
+
+    .trust-layer:nth-child(1)::before { background: var(--accent-rose); }
+    .trust-layer:nth-child(2)::before { background: var(--accent-amber); }
+    .trust-layer:nth-child(3)::before { background: var(--accent-emerald); }
+
+    .trust-layer .tl-phase {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .trust-layer:nth-child(1) .tl-phase { color: var(--accent-rose); }
+    .trust-layer:nth-child(2) .tl-phase { color: var(--accent-amber); }
+    .trust-layer:nth-child(3) .tl-phase { color: var(--accent-emerald); }
+
+    .trust-layer .tl-name {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .trust-layer .tl-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .trust-layer .tl-tools {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .trust-layer .tl-tool {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 4px 10px;
+      background: var(--bg-elevated);
+      border-radius: 6px;
+      color: var(--text-secondary);
+    }
+
+    /* ── Closing section ── */
+    .closing {
+      padding: 120px 60px;
+      text-align: center;
+      position: relative;
+    }
+
+    .closing::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 20%;
+      right: 20%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border-bright), transparent);
+    }
+
+    .closing h2 {
+      font-family: var(--font-display);
+      font-size: clamp(28px, 4vw, 48px);
+      margin-bottom: 20px;
+    }
+
+    .closing h2 em {
+      font-style: italic;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple), var(--accent-emerald));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .closing p {
+      font-size: 18px;
+      color: var(--text-secondary);
+      max-width: 540px;
+      margin: 0 auto;
+      line-height: 1.7;
+      font-weight: 300;
+    }
+
+    .closing-steps {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-top: 48px;
+    }
+
+    .closing-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .closing-step .cs-num {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .closing-step .cs-text {
+      font-size: 14px;
+      color: var(--text-secondary);
+      max-width: 160px;
+      text-align: center;
+    }
+
+    /* ── Footer ── */
+    footer {
+      padding: 40px 60px;
+      text-align: center;
+      border-top: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 12px;
+      font-family: var(--font-mono);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .hero, .section, .closing { padding: 80px 28px; }
+      .agent-types, .trust-stack { grid-template-columns: 1fr; }
+      .nav-dots { display: none; }
+      .closing-steps { flex-direction: column; align-items: center; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<nav class="nav-dots" id="nav">
+  <button class="nav-dot active" data-target="hero"><span class="tooltip">Top</span></button>
+  <button class="nav-dot" data-target="s1"><span class="tooltip">Context</span></button>
+  <button class="nav-dot" data-target="s2"><span class="tooltip">Memory</span></button>
+  <button class="nav-dot" data-target="s3"><span class="tooltip">Parallel</span></button>
+  <button class="nav-dot" data-target="s4"><span class="tooltip">Trust</span></button>
+  <button class="nav-dot" data-target="close"><span class="tooltip">Close</span></button>
+</nav>
+
+<!-- ═══════════════════ HERO ═══════════════════ -->
+<header class="hero" id="hero">
+  <div class="hero-label reveal">Session Grounding</div>
+  <h1 class="reveal reveal-delay-1">Orchestrating <em>AI</em></h1>
+  <p class="hero-sub reveal reveal-delay-2">The most effective AI users aren't writing more code — they're writing less. They've shifted from typing to orchestration: defining problems, setting constraints, and reviewing outputs.</p>
+  <div class="hero-meta reveal reveal-delay-3">
+    <div class="hero-meta-item"><span>&#9654;</span> 1 hr live session</div>
+    <div class="hero-meta-item"><span>&#9654;</span> 4 sections</div>
+    <div class="hero-meta-item"><span>&#9654;</span> continuous demo</div>
+  </div>
+</header>
+
+<!-- ═══════════════════ SECTION 1 — Context ═══════════════════ -->
+<section class="section section--context" id="s1">
+  <div class="content-area">
+    <div class="section-number reveal">01</div>
+    <h2 class="section-question reveal reveal-delay-1">How do I give an agent enough <em>context</em> to succeed?</h2>
+
+    <div class="research-quote reveal reveal-delay-2">
+      <blockquote>"I can't pay attention to everything at once. And there's also the risk of two different agents modifying things that are slightly related."</blockquote>
+      <cite>— User research participant</cite>
+    </div>
+
+    <div class="talking-points">
+      <div class="talking-point reveal">
+        <div class="tp-accent"></div>
+        <div class="tp-text"><strong>The quality of your outcome is decided before the first line of code.</strong> A clear plan is the starting line — sloppy input yields sloppy output, regardless of model.</div>
+      </div>
+      <div class="talking-point reveal reveal-delay-1">
+        <div class="tp-accent"></div>
+        <div class="tp-text">Show the difference between <em>"build me X"</em> and a plan-first approach. The agent orchestrates parallel subagents under the hood — research, codebase scan, doc lookup — you just give it a clear target.</div>
+      </div>
+      <div class="talking-point reveal reveal-delay-2">
+        <div class="tp-accent"></div>
+        <div class="tp-text"><strong>MCPs connect planning to where real work lives</strong> — pull from GitHub issues, Work IQ meeting summaries, Jira. Don't copy-paste context; let the agent pull it.</div>
+      </div>
+      <div class="talking-point reveal reveal-delay-3">
+        <div class="tp-accent"></div>
+        <div class="tp-text">Breaking down plans practically: <strong>UI/Scaffold/Tests-first</strong> as a forcing function. Tests-first gives the agent a verifiable contract. Scaffold-first prevents architectural drift.</div>
+      </div>
+    </div>
+
+    <div class="features-label reveal">Features to demo</div>
+    <div class="features-grid reveal">
+      <div class="feature-card">
+        <div class="fc-name">Plan mode</div>
+        <div class="fc-desc">Start with a clear plan before implementation</div>
+      </div>
+      <div class="feature-card">
+        <div class="fc-name">Clarifying questions</div>
+        <div class="fc-desc">Agent asks instead of assumes</div>
+      </div>
+      <div class="feature-card">
+        <div class="fc-name">MCPs for context</div>
+        <div class="fc-desc">GitHub issues and Work IQ inputs</div>
+      </div>
+    </div>
+
+    <div class="see-also reveal">
+      <button class="see-also-toggle" onclick="this.closest('.see-also').classList.toggle('open')">
+        <span class="arrow">&#9654;</span> See also
+      </button>
+      <div class="see-also-items">
+        <div class="see-also-item"><span class="sa-dot" style="background:var(--accent-blue)"></span>Parallel subagents during plan mode</div>
+        <div class="see-also-item"><span class="sa-dot" style="background:var(--accent-blue)"></span>Mermaid diagrams in chat</div>
+        <div class="see-also-item"><span class="sa-dot" style="background:var(--accent-blue)"></span>MCP Apps / Excalidraw (spatial planning)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SECTION 2 — Memory ═══════════════════ -->
+<section class="section section--memory" id="s2">
+  <div class="content-area">
+    <div class="section-number reveal">02</div>
+    <h2 class="section-question reveal reveal-delay-1">How do I stop <em>repeating myself</em> across sessions?</h2>
+
+    <div class="research-quote reveal reveal-delay-2">
+      <blockquote>"There's a lot to sort of process in my brain."</blockquote>
+      <cite>— User research participant</cite>
+    </div>
+
+    <div class="talking-points">
+      <div class="talking-point reveal">
+        <div class="tp-accent"></div>
+        <div class="tp-text"><strong>Context engineering is the skill.</strong> Not prompting — engineering the persistent world the agent operates in. The best orchestrators build better environments, not better prompts.</div>
+      </div>
+      <div class="talking-point reveal reveal-delay-1">
+        <div class="tp-accent"></div>
+        <div class="tp-text">Start with the easiest unlock: <em>"just ask the agent."</em> It can scaffold its own instruction files, generate skill files, write its own <code style="font-family:var(--font-mono);background:var(--bg-elevated);padding:2px 6px;border-radius:4px;font-size:14px">.agent.md</code>.</div>
+      </div>
+    </div>
+
+    <div class="layers-diagram reveal">
+      <div class="layer-row">
+        <div class="layer-label l-instructions">Instructions</div>
+        <div class="layer-desc">Repo-level conventions. Always loaded. Set-and-forget.</div>
+      </div>
+      <div class="layer-row reveal reveal-delay-1">
+        <div class="layer-label l-skills">Skills</div>
+        <div class="layer-desc">Domain expertise. Loaded when relevant. Shareable like linter configs.</div>
+      </div>
+      <div class="layer-row reveal reveal-delay-2">
+        <div class="layer-label l-agents">Custom Agents</div>
+        <div class="layer-desc">Full personas with tools, skills, grounding docs. Trust you can commit.</div>
+      </div>
+      <div class="layer-row reveal reveal-delay-3">
+        <div class="layer-label l-memory">Memory</div>
+        <div class="layer-desc">Session memory preserves decisions. Repo memory compounds learning.</div>
+      </div>
+      <div class="layer-row reveal reveal-delay-4">
+        <div class="layer-label l-hooks">Hooks</div>
+        <div class="layer-desc">Deterministic guardrails. Not prompts — actual code that executes.</div>
+      </div>
+    </div>
+
+    <div class="features-label reveal">Features to demo</div>
+    <div class="features-grid reveal">
+      <div class="feature-card">
+        <div class="fc-name">"Ask the agent"</div>
+        <div class="fc-desc">Generate instruction and skill files in-workspace</div>
+      </div>
+      <div class="feature-card">
+        <div class="fc-name">Layered customization</div>
+        <div class="fc-desc">Instructions &rarr; Skills &rarr; Custom agents</div>
+      </div>
+      <div class="feature-card">
+        <div class="fc-name">Memory</div>
+        <div class="fc-desc">Session + repo memory — persist and reuse context</div>
+      </div>
+      <div class="feature-card">
+        <div class="fc-name">Hooks</div>
+        <div class="fc-desc">Linter-on-edit, deny patterns, org policy</div>
+      </div>
+    </div>
+
+    <div class="see-also reveal">
+      <button class="see-also-toggle" onclick="this.closest('.see-also').classList.toggle('open')">
+        <span class="arrow">&#9654;</span> See also
+      </button>
+      <div class="see-also-items">
+        <div class="see-also-item"><span class="sa-dot" style="background:var(--accent-purple)"></span>AGENTS.md / .prompt.md layers</div>
+        <div class="see-also-item"><span class="sa-dot" style="background:var(--accent-purple)"></span>Skills from extensions (chatSkills)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SECTION 3 — Parallel ═══════════════════ -->
+<section class="section section--parallel" id="s3">
+  <div class="content-area">
+    <div class="section-number reveal">03</div>
+    <h2 class="section-question reveal reveal-delay-1">When should I run <em>more than one</em> agent?</h2>
+
+    <div class="research-quote reveal reveal-delay-2">
+      <blockquote>"They're helping me get a week's worth of work done in a day. But it also feels like I'm having to process a week's worth of information in a day as well."</blockquote>
+      <cite>— User research participant</cite>
+    </div>
+
+    <div class="talking-points">
+      <div class="talking-point reveal">
+        <div class="tp-accent"></div>
+        <div class="tp-text"><strong>The answer isn't "always"</strong> — it's about matching agent type to task shape. Three types, three decision criteria.</div>
+      </div>
+      <div class="talking-point reveal reveal-delay-1">
+        <div class="tp-accent"></div>
+        <div class="tp-text">The <em>operating model</em>: stay hands-on locally for visual work, delegate scoped tasks to background, send explorative work to cloud. This is the judgment call — a practice, not a feature.</div>
+      </div>
+      <div class="talking-point reveal reveal-delay-2">
+        <div class="tp-accent"></div>
+        <div class="tp-text"><strong>The daily rhythm:</strong> your actual morning/evening pattern. When do you use plan mode? When do you skip it? When do you go straight to background? This is orchestration in practice.</div>
+      </div>
+    </div>
+
+    <div class="agent-types reveal">
+      <div class="agent-type-card">
+        <div class="atc-icon">&#9998;</div>
+        <div class="atc-name">Local</div>
+        <div class="atc-when">Visual, interactive, needs your judgment mid-flight. Stay hands-on.</div>
+        <div class="atc-trait">your workspace</div>
+      </div>
+      <div class="agent-type-card reveal reveal-delay-1">
+        <div class="atc-icon">&#9881;</div>
+        <div class="atc-name">Background</div>
+        <div class="atc-when">Well-scoped, deterministic. Runs in an isolated worktree with terminal sandbox.</div>
+        <div class="atc-trait">isolated worktree</div>
+      </div>
+      <div class="agent-type-card reveal reveal-delay-2">
+        <div class="atc-icon">&#9729;</div>
+        <div class="atc-name">Cloud</div>
+        <div class="atc-when">Explorative, can take time. Changes land as PRs with CI gates.</div>
+        <div class="atc-trait">lands as PR</div>
+      </div>
+    </div>
+
+    <div class="features-label reveal">Features to demo</div>
+    <div class="features-grid reveal">
+      <div class="feature-card">
+        <div class="fc-name">Agent Sessions view</div>
+        <div class="fc-desc">Mission control — status and check-ins</div>
+      </div>
+      <div class="feature-card">
+        <div class="fc-name">Background + worktrees</div>
+        <div class="fc-desc">Run scoped tasks in isolation</div>
+      </div>
+      <div class="feature-card">
+        <div class="fc-name">Cloud agents</div>
+        <div class="fc-desc">Explorative work &rarr; PR landing</div>
+      </div>
+      <div class="feature-card">
+        <div class="fc-name">Copilot in PRs</div>
+        <div class="fc-desc">Assign issue &rarr; wake up to drafts</div>
+      </div>
+    </div>
+
+    <div class="see-also reveal">
+      <button class="see-also-toggle" onclick="this.closest('.see-also').classList.toggle('open')">
+        <span class="arrow">&#9654;</span> See also
+      </button>
+      <div class="see-also-items">
+        <div class="see-also-item"><span class="sa-dot" style="background:var(--accent-emerald)"></span>Terminal sandbox (fs/network controls)</div>
+        <div class="see-also-item"><span class="sa-dot" style="background:var(--accent-emerald)"></span>Multi-model (Claude/Codex/Copilot)</div>
+        <div class="see-also-item"><span class="sa-dot" style="background:var(--accent-emerald)"></span>Subagents (internal parallelism)</div>
+        <div class="see-also-item"><span class="sa-dot" style="background:var(--accent-emerald)"></span>Terminal-first CLI flows</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SECTION 4 — Trust ═══════════════════ -->
+<section class="section section--trust" id="s4">
+  <div class="content-area">
+    <div class="section-number reveal">04</div>
+    <h2 class="section-question reveal reveal-delay-1">How do I know when to <em>trust</em> the output?</h2>
+
+    <div class="research-quote reveal reveal-delay-2">
+      <blockquote>"The anxiety was not worth the few seconds I saved... I would still stick to one task at a time."</blockquote>
+      <cite>— User research participant</cite>
+    </div>
+
+    <div class="talking-points">
+      <div class="talking-point reveal">
+        <div class="tp-accent"></div>
+        <div class="tp-text"><strong>Trust isn't binary</strong> — it's a spectrum you calibrate over time. The anxiety is real and valid. What resolves it isn't blind confidence — it's layered controls.</div>
+      </div>
+      <div class="talking-point reveal reveal-delay-1">
+        <div class="tp-accent"></div>
+        <div class="tp-text"><strong>Start tight, loosen as you learn.</strong> Side project? Approve-all. Production code? Full sandbox + hooks + code review. The controls exist so you go <em>faster</em> with confidence.</div>
+      </div>
+    </div>
+
+    <div class="trust-stack reveal">
+      <div class="trust-layer">
+        <div class="tl-phase">During execution</div>
+        <div class="tl-name">Prevention</div>
+        <div class="tl-desc">Hooks fire on every tool call. Terminal sandbox restricts filesystem and network. Deterministic code, not prompts.</div>
+        <div class="tl-tools">
+          <span class="tl-tool">Hooks</span>
+          <span class="tl-tool">Sandbox</span>
+          <span class="tl-tool">Auto-approve</span>
+        </div>
+      </div>
+      <div class="trust-layer reveal reveal-delay-1">
+        <div class="tl-phase">At review time</div>
+        <div class="tl-name">Review</div>
+        <div class="tl-desc">Copilot Code Review on PRs with risk-prioritized highlighting. Grounded in your custom instructions.</div>
+        <div class="tl-tools">
+          <span class="tl-tool">CCR</span>
+          <span class="tl-tool">Risk flags</span>
+          <span class="tl-tool">Summaries</span>
+        </div>
+      </div>
+      <div class="trust-layer reveal reveal-delay-2">
+        <div class="tl-phase">After completion</div>
+        <div class="tl-name">Verification</div>
+        <div class="tl-desc">Custom agents that encode what "good" looks like. Dogfooding agent with persona, browser MCP, product brief.</div>
+        <div class="tl-tools">
+          <span class="tl-tool">.agent.md</span>
+          <span class="tl-tool">Playwright</span>
+          <span class="tl-tool">Self-review</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="features-label reveal">Features to demo</div>
+    <div class="features-grid reveal">
+      <div class="feature-card">
+        <div class="fc-name">Hooks + sandbox</div>
+        <div class="fc-desc">Prevention layer during execution</div>
+      </div>
+      <div class="feature-card">
+        <div class="fc-name">Copilot Code Review</div>
+        <div class="fc-desc">Risk-prioritized review layer</div>
+      </div>
+      <div class="feature-card">
+        <div class="fc-name">Dogfooding agent</div>
+        <div class="fc-desc">.agent.md + Playwright MCP + skills</div>
+      </div>
+    </div>
+
+    <div class="see-also reveal">
+      <button class="see-also-toggle" onclick="this.closest('.see-also').classList.toggle('open')">
+        <span class="arrow">&#9654;</span> See also
+      </button>
+      <div class="see-also-items">
+        <div class="see-also-item"><span class="sa-dot" style="background:var(--accent-amber)"></span>Auto-approval rules</div>
+        <div class="see-also-item"><span class="sa-dot" style="background:var(--accent-amber)"></span>Agent self-review patterns</div>
+        <div class="see-also-item"><span class="sa-dot" style="background:var(--accent-amber)"></span>Vision support (screenshot review)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ CLOSING ═══════════════════ -->
+<section class="closing" id="close">
+  <h2 class="reveal"><em>Plan, direct, multiply, ship.</em></h2>
+  <p class="reveal reveal-delay-1">Start with two agents, not five. You'll know when you're ready for more.</p>
+
+  <div class="closing-steps reveal reveal-delay-2">
+    <div class="closing-step">
+      <div class="cs-num">1</div>
+      <div class="cs-text">Use plan mode for one task</div>
+    </div>
+    <div class="closing-step">
+      <div class="cs-num">2</div>
+      <div class="cs-text">Send one subtask to background</div>
+    </div>
+    <div class="closing-step">
+      <div class="cs-num">3</div>
+      <div class="cs-text">Review, commit, ship</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Orchestrating AI &mdash; Session Grounding &mdash; VS Code
+</footer>
+
+<script>
+  // ── Scroll reveal ──
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+  reveals.forEach(el => observer.observe(el));
+
+  // ── Progress bar ──
+  const progressBar = document.getElementById('progress');
+  function updateProgress() {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    progressBar.style.width = progress + '%';
+  }
+  window.addEventListener('scroll', updateProgress, { passive: true });
+
+  // ── Nav dots ──
+  const sections = ['hero', 's1', 's2', 's3', 's4', 'close'];
+  const dots = document.querySelectorAll('.nav-dot');
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      const target = document.getElementById(dot.dataset.target);
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+
+  function updateNav() {
+    let current = 'hero';
+    for (const id of sections) {
+      const el = document.getElementById(id);
+      if (el && el.getBoundingClientRect().top <= window.innerHeight * 0.4) {
+        current = id;
+      }
+    }
+    dots.forEach(dot => {
+      dot.classList.toggle('active', dot.dataset.target === current);
+    });
+  }
+  window.addEventListener('scroll', updateNav, { passive: true });
+</script>
+
+</body>
+</html>

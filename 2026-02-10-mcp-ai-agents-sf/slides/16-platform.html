@@ -1,0 +1,47 @@
+<!-- 16: Platform credibility — Making it Scale + Distribution -->
+<section class="slide">
+    <div class="slide-content">
+        <span class="badge badge-blue reveal">Platform</span>
+
+        <h2 class="reveal">Making it <span class="accent-blue">scale</span></h2>
+
+        <p class="reveal" style="margin-bottom: 2rem;">
+            Too many tools confuse the model <em>and</em> bloat context. GitHub MCP Server's Projects toolset consumed ~23K tokens — consolidated by 50%.
+        </p>
+
+        <div class="grid-3" style="margin-top: 1rem;">
+            <div class="card reveal">
+                <h3>Virtual Tools</h3>
+                <p>When tools exceed a threshold, VS Code groups them automatically. The model activates groups on demand — hundreds of tools never hit context at once.</p>
+            </div>
+
+            <div class="card reveal">
+                <h3>Tool Search</h3>
+                <p>A meta-tool that helps Claude discover the most relevant tools from a larger pool — smart routing, not brute-force listing.</p>
+            </div>
+
+            <div class="card reveal">
+                <h3>Smart Responses</h3>
+                <p>Large tool responses are automatically summarized or chunked before hitting context — the model sees what matters, not a 50K-token dump.</p>
+            </div>
+        </div>
+
+        <div class="grid-2 reveal" style="margin-top: 1rem;">
+            <div class="card">
+                <h3>🧩 MCP in Extensions</h3>
+                <p>Extensions bundle MCP servers — zero config, auto-discovery, settings sync. <strong class="accent-blue">Azure</strong> and <strong class="accent">GitHub</strong> ship built-in. Search <code style="color: var(--accent); font-family: var(--font-mono); font-size: 0.9em;">@mcp</code> in the marketplace.</p>
+            </div>
+
+            <div class="card">
+                <h3>📦 MCP Registry</h3>
+                <p>Built-in discovery and install — browse verified servers from the MCP Registry directly in VS Code. One-click add to workspace.</p>
+            </div>
+
+        </div>
+
+        <div class="callout reveal" style="margin-top: 1.5rem; border-left-color: var(--accent-secondary); background: linear-gradient(135deg, rgba(88, 166, 255, 0.06), rgba(167, 139, 250, 0.03));">
+            <h3 style="color: var(--accent-secondary);">🛠️ MCP Dev Mode</h3>
+            <p>Add a <code style="color: var(--accent); font-family: var(--font-mono); font-size: 0.9em;">dev</code> key to your server config — file-watch restart, integrated debugger (Node.js + Python), and protocol-level logs. Most agent bugs aren't model bugs — they're server bugs. Dev mode makes behavior observable.</p>
+        </div>
+    </div>
+</section>

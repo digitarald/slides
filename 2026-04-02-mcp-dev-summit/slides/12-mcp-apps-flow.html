@@ -1,0 +1,83 @@
+<!-- MCP Apps Architecture Flow -->
+<section class="slide bg-gradient-subtle">
+    <div class="slide-content">
+        <h2 class="reveal">How MCP Apps render</h2>
+        <p class="text-secondary reveal" style="margin-bottom: 20px; max-width: 600px;">
+            Tools declare UI resources. The host fetches HTML, renders it in a sandboxed iframe, and bridges communication via <code>postMessage</code>.
+        </p>
+
+        <!-- Architecture flow as stacked steps -->
+        <div style="display: flex; flex-direction: column; gap: 0; max-width: 750px;" class="reveal delay-2">
+            <!-- Step 1 -->
+            <div style="display: flex; gap: 16px; align-items: stretch;">
+                <div style="display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 32px;">
+                    <div style="width: 24px; height: 24px; border-radius: 50%; background: var(--purple); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: var(--bg-primary);">1</div>
+                    <div style="width: 1px; flex: 1; background: var(--border);"></div>
+                </div>
+                <div style="padding-bottom: 14px; flex: 1;">
+                    <p style="font-size: 14px; color: var(--text-bright); margin-bottom: 4px; font-weight: 500;">Tool declares UI metadata</p>
+                    <div class="code-block" style="font-size: 11px; padding: 10px 14px;">
+                        <span class="property">"_meta"</span>: { <span class="property">"ui"</span>: { <span class="property">"resourceUri"</span>: <span class="string">"ui://charts/dashboard"</span> } }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div style="display: flex; gap: 16px; align-items: stretch;">
+                <div style="display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 32px;">
+                    <div style="width: 24px; height: 24px; border-radius: 50%; background: var(--purple); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: var(--bg-primary);">2</div>
+                    <div style="width: 1px; flex: 1; background: var(--border);"></div>
+                </div>
+                <div style="padding-bottom: 14px; flex: 1;">
+                    <p style="font-size: 14px; color: var(--text-bright); margin-bottom: 4px; font-weight: 500;">Host fetches HTML resource from server</p>
+                    <p class="text-muted" style="font-size: 13px;">MIME: <code style="font-size: 11px;">text/html+mcp</code> &mdash; client validates before rendering</p>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div style="display: flex; gap: 16px; align-items: stretch;">
+                <div style="display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 32px;">
+                    <div style="width: 24px; height: 24px; border-radius: 50%; background: var(--purple); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: var(--bg-primary);">3</div>
+                    <div style="width: 1px; flex: 1; background: var(--border);"></div>
+                </div>
+                <div style="padding-bottom: 14px; flex: 1;">
+                    <p style="font-size: 14px; color: var(--text-bright); margin-bottom: 4px; font-weight: 500;">Rendered in sandboxed iframe in chat</p>
+                    <p class="text-muted" style="font-size: 13px;">No parent access, restricted DOM, all tool calls logged and auditable</p>
+                </div>
+            </div>
+
+            <!-- Step 4 -->
+            <div style="display: flex; gap: 16px; align-items: stretch;">
+                <div style="display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 32px;">
+                    <div style="width: 24px; height: 24px; border-radius: 50%; background: var(--purple); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: var(--bg-primary);">4</div>
+                    <div style="width: 1px; flex: 1; background: transparent;"></div>
+                </div>
+                <div style="flex: 1;">
+                    <p style="font-size: 14px; color: var(--text-bright); margin-bottom: 4px; font-weight: 500;">Bidirectional JSON-RPC via <code>postMessage</code></p>
+                    <div class="code-block" style="font-size: 11px; padding: 10px 14px;">
+                        <span class="comment">// Inside iframe — call back to server</span><br>
+                        <span class="keyword">const</span> <span class="property">result</span> = <span class="keyword">await</span> <span class="function">bridge</span>.<span class="function">callServerTool</span>(<span class="string">'drill_down'</span>, { <span class="property">traceId</span> })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sampling connection -->
+        <div class="tip-box reveal delay-4 mt-md" style="border-left-color: var(--cyan); max-width: 750px;">
+            <p style="font-size: 14px;">
+                <span class="codicon codicon-sparkle" aria-hidden="true" style="color: var(--cyan);"></span>
+                <strong style="color: var(--text-bright);">+ Sampling:</strong>
+                <span class="text-secondary">The server can call <code style="font-size: 11px;">sampling/createMessage</code> to reason about your data using the client's LLM. Server orchestrates, client executes&mdash;no API keys needed on the server.</span>
+            </p>
+        </div>
+
+        <!-- Capability negotiation -->
+        <div class="tip-box reveal delay-4 mt-sm" style="border-left-color: var(--orange); max-width: 750px;">
+            <p style="font-size: 14px;">
+                <span class="codicon codicon-versions" aria-hidden="true" style="color: var(--orange);"></span>
+                <strong style="color: var(--text-bright);">Graceful degradation:</strong>
+                <span class="text-secondary">Clients declare support via <code style="font-size: 11px;">capabilities.experimental.mcpApps</code>. Unsupported clients never see the <code style="font-size: 11px;">_meta.ui</code> field. Servers can add fallback tools to expose data as text.</span>
+            </p>
+        </div>
+    </div>
+</section>

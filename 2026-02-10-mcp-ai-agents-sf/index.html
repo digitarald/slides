@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>From Tools to Teammates | MCP Deep Dive</title>
+
+    <!-- Fonts -->
+    <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=satoshi@400,500,700&display=swap">
+
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Atmospheric background -->
+    <div class="atmosphere"></div>
+
+    <!-- Progress indicator -->
+    <div class="progress-indicator" id="progress"></div>
+
+    <!-- Navigation dots -->
+    <nav class="nav-dots" id="navDots" aria-label="Slide navigation"></nav>
+
+    <!-- Slide counter -->
+    <div class="slide-counter">
+        <span class="current" id="currentSlide">01</span>
+        <span>/</span>
+        <span id="totalSlides">00</span>
+    </div>
+
+    <!-- Slides Container -->
+    <main id="slides-container"></main>
+
+    <!-- Slide Loader -->
+    <script>
+        const slideFiles = [
+            'slides/01-title.html',
+            'slides/02-hook.html',
+            'slides/03-mcp-frame.html',
+            'slides/04-act1-title.html',
+            'slides/05-elicitations.html',
+            'slides/06-elicitations-examples.html',
+            'slides/07-demo-elicitations.html',
+            'slides/08-act2-title.html',
+            'slides/09-tasks.html',
+            'slides/10-demo-tasks.html',
+            'slides/11-act3-title.html',
+            'slides/12-mcp-apps.html',
+            'slides/13-mcp-apps-ecosystem.html',
+            'slides/14-demo-mcp-apps.html',
+            'slides/15-why-not-cli.html',
+            'slides/16-platform.html',
+            'slides/17-extras.html',
+            'slides/18-close.html'
+        ];
+
+        async function loadSlides() {
+            const container = document.getElementById('slides-container');
+
+            try {
+                const slidePromises = slideFiles.map(file =>
+                    fetch(file).then(response => {
+                        if (!response.ok) throw new Error(`Failed to load ${file}`);
+                        return response.text();
+                    })
+                );
+
+                const slideContents = await Promise.all(slidePromises);
+                container.innerHTML = slideContents.join('\n');
+
+                document.getElementById('totalSlides').textContent =
+                    String(slideFiles.length).padStart(2, '0');
+
+                initPresentation();
+            } catch (error) {
+                console.error('Error loading slides:', error);
+                container.innerHTML = `
+                    <section class="slide">
+                        <div class="slide-content" style="text-align: center;">
+                            <h2>Error Loading Slides</h2>
+                            <p style="color: var(--accent-warn); margin: 1rem 0;">${error.message}</p>
+                            <p style="max-width: 50ch; margin: 0 auto;">
+                                This presentation requires a local server:
+                            </p>
+                            <div style="background: var(--bg-tertiary); padding: 1.5rem; border-radius: 0.5rem; margin-top: 1.5rem; font-family: monospace; text-align: left; max-width: 400px; margin-left: auto; margin-right: auto;">
+                                <p style="color: var(--text-primary); margin-bottom: 0.5rem;">npx serve</p>
+                                <p style="color: var(--text-primary);">python -m http.server 8000</p>
+                            </div>
+                        </div>
+                    </section>
+                `;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadSlides);
+    </script>
+
+    <!-- Presentation Controller -->
+    <script src="presentation.js"></script>
+</body>
+</html>

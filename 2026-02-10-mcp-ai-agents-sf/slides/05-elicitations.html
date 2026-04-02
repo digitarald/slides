@@ -1,0 +1,69 @@
+<!-- 05: Elicitations deep dive -->
+<section class="slide">
+    <div class="slide-content">
+        <span class="badge badge-teal reveal">Elicitations</span>
+
+        <h2 class="reveal">Servers that <span class="accent">talk back</span></h2>
+
+        <p class="reveal" style="margin-bottom: 2rem;">
+            Elicitations let a server communicate with the user directly — <strong>bypassing the agent</strong> — so sensitive decisions and credentials never pass through the model.
+        </p>
+
+        <div class="two-col narrow-wide">
+            <div class="reveal-left">
+                <h3 style="margin-bottom: 1.5rem;">Four use cases</h3>
+                <ul class="feature-list">
+                    <li><strong>Configuration</strong> — "Which environment? Staging or prod?"</li>
+                    <li><strong>Confirmation</strong> — "This will delete 3 tables. Proceed?"</li>
+                    <li><strong>Selection</strong> — "Pick a service boundary from this list"</li>
+                    <li><strong>Secure auth handoff</strong> — URL elicitation redirects to OAuth/SSO</li>
+                </ul>
+
+                <div style="margin-top: 2rem;">
+                    <h3 style="margin-bottom: 0.75rem;">Two flavors, different trust models</h3>
+                    <ul class="mini-list">
+                        <li><strong>Form elicitations</strong> — in-band: structured input rendered in the client UI</li>
+                        <li><strong>URL elicitations</strong> — out-of-band: redirect to external flows; credentials never touch the client or the agent</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="reveal-right">
+                <!-- CSS mock-up: VS Code elicitation dialog -->
+                <div class="mock-vscode-dialog">
+                    <div class="mock-dialog-titlebar">
+                        <span class="mock-dialog-icon">🔌</span>
+                        <span>deploy-server</span>
+                        <span class="mock-dialog-badge">MCP Elicitation</span>
+                    </div>
+                    <div class="mock-dialog-body">
+                        <p class="mock-dialog-prompt">Select deployment environment:</p>
+                        <div class="mock-radio-group">
+                            <label class="mock-radio">
+                                <span class="mock-radio-dot"></span>
+                                <span>Development</span>
+                            </label>
+                            <label class="mock-radio">
+                                <span class="mock-radio-dot selected"></span>
+                                <span>Staging</span>
+                            </label>
+                            <label class="mock-radio">
+                                <span class="mock-radio-dot"></span>
+                                <span>Production</span>
+                            </label>
+                        </div>
+                        <p class="mock-dialog-prompt" style="margin-top: 1rem;">Region:</p>
+                        <div class="mock-select">
+                            <span>us-east-1</span>
+                            <span class="mock-select-arrow">▾</span>
+                        </div>
+                        <div class="mock-dialog-actions">
+                            <button class="mock-btn-secondary">Cancel</button>
+                            <button class="mock-btn-primary">Confirm</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

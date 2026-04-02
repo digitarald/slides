@@ -1,0 +1,96 @@
+<!-- Callback: "But bash does all this" -->
+<section class="slide">
+    <div class="slide-content">
+        <h2 class="reveal">
+            <span class="text-muted">"But</span> bash does all this<span class="text-muted">"</span>
+        </h2>
+        <p class="text-secondary reveal" style="margin-bottom: 36px;">
+            Bash does execution. MCP fills the missing middle.
+        </p>
+
+        <div style="display: flex; flex-direction: column; gap: 2px; max-width: 750px;">
+            <!-- Header row -->
+            <div class="reveal" style="display: grid; grid-template-columns: 140px 1fr 1fr; gap: 2px;">
+                <div></div>
+                <div style="background: var(--bg-tertiary); padding: 10px 16px; border-radius: 4px 4px 0 0;">
+                    <p class="mono text-muted" style="font-size: 11px;">
+                        <span class="codicon codicon-terminal" aria-hidden="true"></span> BASH
+                    </p>
+                </div>
+                <div style="background: var(--accent-glow); padding: 10px 16px; border-radius: 4px 4px 0 0; border: 1px solid rgba(55,148,255,0.2); border-bottom: none;">
+                    <p class="mono text-accent" style="font-size: 11px;">
+                        <span class="codicon codicon-symbol-interface" aria-hidden="true"></span> MCP
+                    </p>
+                </div>
+            </div>
+
+            <!-- Input row -->
+            <div class="reveal delay-1" style="display: grid; grid-template-columns: 140px 1fr 1fr; gap: 2px;">
+                <div style="background: var(--bg-secondary); padding: 12px 16px; display: flex; align-items: center;">
+                    <span class="mono text-green" style="font-size: 13px;">Input</span>
+                </div>
+                <div style="background: var(--bg-secondary); padding: 12px 16px;">
+                    <p style="font-size: 13px; color: var(--text-secondary);">
+                        Can prompt, but can't redirect to OAuth or render a structured form
+                    </p>
+                </div>
+                <div style="background: var(--bg-secondary); padding: 12px 16px; border-left: 2px solid var(--green);">
+                    <p style="font-size: 13px; color: var(--text-primary);">
+                        JSON Schema forms, enum selects, URL redirects for OAuth/SSO
+                    </p>
+                </div>
+            </div>
+
+            <!-- Status row -->
+            <div class="reveal delay-2" style="display: grid; grid-template-columns: 140px 1fr 1fr; gap: 2px;">
+                <div style="background: var(--bg-secondary); padding: 12px 16px; display: flex; align-items: center;">
+                    <span class="mono text-yellow" style="font-size: 13px;">Status</span>
+                </div>
+                <div style="background: var(--bg-secondary); padding: 12px 16px;">
+                    <p style="font-size: 13px; color: var(--text-secondary);">
+                        Has stdout, but agent doesn't surface structured progress
+                    </p>
+                </div>
+                <div style="background: var(--bg-secondary); padding: 12px 16px; border-left: 2px solid var(--yellow);">
+                    <p style="font-size: 13px; color: var(--text-primary);">
+                        State machine, SSE progress, human checkpoints, survives disconnects
+                    </p>
+                </div>
+            </div>
+
+            <!-- Output row -->
+            <div class="reveal delay-3" style="display: grid; grid-template-columns: 140px 1fr 1fr; gap: 2px;">
+                <div style="background: var(--bg-secondary); padding: 12px 16px; display: flex; align-items: center;">
+                    <span class="mono text-purple" style="font-size: 13px;">Output</span>
+                </div>
+                <div style="background: var(--bg-secondary); padding: 12px 16px;">
+                    <p style="font-size: 13px; color: var(--text-secondary);">
+                        Can't render a flame graph you click on inside the conversation
+                    </p>
+                </div>
+                <div style="background: var(--bg-secondary); padding: 12px 16px; border-left: 2px solid var(--purple);">
+                    <p style="font-size: 13px; color: var(--text-primary);">
+                        Sandboxed iframes, interactive charts, live component previews
+                    </p>
+                </div>
+            </div>
+
+            <!-- Identity row -->
+            <div class="reveal delay-4" style="display: grid; grid-template-columns: 140px 1fr 1fr; gap: 2px;">
+                <div style="background: var(--bg-secondary); padding: 12px 16px; border-radius: 0 0 0 4px; display: flex; align-items: center;">
+                    <span class="mono" style="font-size: 13px; color: var(--cyan);">Identity</span>
+                </div>
+                <div style="background: var(--bg-secondary); padding: 12px 16px; border-radius: 0 0 0 0;">
+                    <p style="font-size: 13px; color: var(--text-secondary);">
+                        Inherits shell user. No scoping, no governance.
+                    </p>
+                </div>
+                <div style="background: var(--bg-secondary); padding: 12px 16px; border-left: 2px solid var(--cyan); border-radius: 0 0 4px 0;">
+                    <p style="font-size: 13px; color: var(--text-primary);">
+                        Scoped tokens per server, OAuth 2.1, audience binding (RFC 8707)
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

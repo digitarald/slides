@@ -1,0 +1,74 @@
+<!-- Tasks: Parallel Task Progress -->
+<section class="slide bg-dots">
+    <div class="slide-content">
+        <h2 class="reveal">Multiple tasks, <span class="text-yellow">running in parallel</span></h2>
+        <p class="text-secondary reveal" style="margin-bottom: 20px; max-width: 650px;">
+            Each task has its own ID, state, and progress. The client tracks them all.
+        </p>
+
+        <div style="display: flex; flex-direction: column; gap: 12px; max-width: 700px;">
+            <!-- Task 1: Working (primary, with progress bar) -->
+            <div class="card reveal delay-2" style="padding: 0; overflow: hidden;">
+                <div style="padding: 12px 18px; border-bottom: 1px solid var(--border-subtle); display: flex; align-items: center; gap: 10px;">
+                    <span class="codicon codicon-loading codicon-modifier-spin text-accent" aria-hidden="true"></span>
+                    <span style="font-size: 14px; color: var(--text-bright); font-weight: 500;">Indexing OpenTelemetry spans</span>
+                    <div class="state-badge state-working" style="font-size: 10px; padding: 2px 8px; margin-left: auto;">working</div>
+                </div>
+                <div style="padding: 12px 18px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                        <span class="mono text-secondary" style="font-size: 11px;">Progress</span>
+                        <span class="mono text-accent" style="font-size: 11px;">847 / 1,204 spans</span>
+                    </div>
+                    <div style="height: 4px; background: var(--bg-input); border-radius: 2px; overflow: hidden;">
+                        <div id="taskProgress" style="height: 100%; background: var(--accent); border-radius: 2px; width: 0%; transition: width 0.3s ease;"></div>
+                    </div>
+                    <div style="margin-top: 10px; display: flex; align-items: center; gap: 8px;">
+                        <span class="codicon codicon-loading codicon-modifier-spin text-accent" aria-hidden="true" style="font-size: 11px;"></span>
+                        <span class="text-secondary" style="font-size: 11px;">Indexing service traces...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Task 2: Completed -->
+            <div class="card reveal delay-3" style="padding: 0; overflow: hidden; opacity: 0.85;">
+                <div style="padding: 12px 18px; display: flex; align-items: center; gap: 10px;">
+                    <span class="codicon codicon-check text-green" aria-hidden="true"></span>
+                    <span style="font-size: 14px; color: var(--text-bright); font-weight: 500;">Validating service dependencies</span>
+                    <div class="state-badge state-complete" style="font-size: 10px; padding: 2px 8px; margin-left: auto;">completed</div>
+                </div>
+                <div style="padding: 0 18px 12px; display: flex; gap: 16px; font-size: 11px;">
+                    <span class="text-muted">
+                        <span class="codicon codicon-check" aria-hidden="true"></span>
+                        14 services validated
+                    </span>
+                    <span class="text-muted">
+                        <span class="codicon codicon-clock" aria-hidden="true"></span>
+                        Completed in 4.2s
+                    </span>
+                </div>
+            </div>
+
+            <!-- Task 3: Input Required -->
+            <div class="card reveal delay-4" style="padding: 0; overflow: hidden; border-color: rgba(206,145,120,0.3);">
+                <div style="padding: 12px 18px; border-bottom: 1px solid var(--border-subtle); display: flex; align-items: center; gap: 10px;">
+                    <span class="codicon codicon-question text-orange" aria-hidden="true"></span>
+                    <span style="font-size: 14px; color: var(--text-bright); font-weight: 500;">Generating trace summary</span>
+                    <div class="state-badge state-input" style="font-size: 10px; padding: 2px 8px; margin-left: auto;">input_required</div>
+                </div>
+                <div style="padding: 12px 18px; display: flex; align-items: center; gap: 12px; background: rgba(206,145,120,0.05);">
+                    <span class="codicon codicon-warning text-orange" aria-hidden="true" style="font-size: 14px;"></span>
+                    <div>
+                        <p style="font-size: 12px; color: var(--text-bright);">Multiple trace formats detected</p>
+                        <p class="text-muted" style="font-size: 11px;">Select format: <code style="font-size: 10px;">opentelemetry</code> or <code style="font-size: 10px;">zipkin</code>?</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Protocol snippet -->
+        <div class="code-block reveal delay-4 mt-md" style="max-width: 700px; font-size: 10px; padding: 10px 14px;">
+            <span class="comment">// Client tracks all tasks via tasks/list</span><br>
+            { <span class="property">"method"</span>: <span class="string">"tasks/list"</span> } &rarr; [{ <span class="property">"taskId"</span>: <span class="string">"a1"</span>, <span class="property">"status"</span>: <span class="string">"working"</span> }, { <span class="property">"taskId"</span>: <span class="string">"b2"</span>, <span class="property">"status"</span>: <span class="string">"completed"</span> }, { <span class="property">"taskId"</span>: <span class="string">"c3"</span>, <span class="property">"status"</span>: <span class="string">"input_required"</span> }]
+        </div>
+    </div>
+</section>

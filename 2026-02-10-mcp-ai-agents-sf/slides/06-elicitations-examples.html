@@ -1,0 +1,63 @@
+<!-- 06: Elicitation examples & real-world patterns -->
+<section class="slide">
+    <div class="slide-content">
+        <span class="badge badge-teal reveal">Patterns</span>
+
+        <h2 class="reveal">Elicitations in<br><span class="accent">practice</span></h2>
+
+        <div class="grid-3" style="margin-top: 2.5rem;">
+            <div class="card reveal">
+                <div class="card-icon" style="background: linear-gradient(135deg, var(--accent), var(--accent-secondary));">🔀</div>
+                <h3>Migration Decisions</h3>
+                <p>"Migrate auth to OAuth—keep sessions or go stateless?"</p>
+                <div class="badge badge-teal" style="margin-top: 0.75rem;">Form Elicitation</div>
+            </div>
+
+            <div class="card reveal">
+                <div class="card-icon" style="background: linear-gradient(135deg, var(--accent-warn), var(--accent-pink));">🧪</div>
+                <h3>Scope Clarification</h3>
+                <p>"Fix flaky tests—CI only or local too?"</p>
+                <div class="badge badge-teal" style="margin-top: 0.75rem;">Form Elicitation</div>
+            </div>
+
+            <div class="card reveal">
+                <div class="card-icon" style="background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));">🔗</div>
+                <h3>Secure Auth Handoff</h3>
+                <p>"Connect to Salesforce" — server triggers URL elicitation → user completes OAuth in browser → token never exposed to the agent.</p>
+                <div class="badge badge-purple" style="margin-top: 0.75rem;">URL Elicitation</div>
+            </div>
+        </div>
+
+        <div class="protocol-flow reveal" style="margin-top: 2.5rem;">
+            <div class="protocol-step">
+                <div class="step-icon">🤖</div>
+                <h4>Agent</h4>
+                <span>Calls tool</span>
+            </div>
+            <div class="protocol-arrow">→</div>
+            <div class="protocol-step">
+                <div class="step-icon">🔌</div>
+                <h4>MCP Server</h4>
+                <span>Needs input</span>
+            </div>
+            <div class="protocol-arrow">→</div>
+            <div class="protocol-step">
+                <div class="step-icon">💬</div>
+                <h4>Elicitation</h4>
+                <span>Structured question</span>
+            </div>
+            <div class="protocol-arrow">→</div>
+            <div class="protocol-step">
+                <div class="step-icon">👤</div>
+                <h4>User</h4>
+                <span>Answers / approves</span>
+            </div>
+            <div class="protocol-arrow">→</div>
+            <div class="protocol-step">
+                <div class="step-icon">✅</div>
+                <h4>Continue</h4>
+                <span>Aligned execution</span>
+            </div>
+        </div>
+    </div>
+</section>

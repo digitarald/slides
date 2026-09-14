@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>The MCP skill tree</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="deck-content.js" defer></script>
+  <script src="presentation.js" defer></script>
+</head>
+<body>
+  <div id="stage">
+    <main id="viewport" aria-label="The MCP skill tree">
+      <div id="world">
+        <svg id="network" viewBox="0 0 4800 2900" aria-hidden="true"></svg>
+        <div id="map-nodes"></div>
+        <div id="scenes"></div>
+      </div>
+      <div id="map-caption" aria-hidden="true"></div>
+    </main>
+    <nav class="breadcrumb" aria-label="Presentation location"><button id="overview" title="Capability map">MCP</button><span>/</span><span id="branch-name">THE SKILL TREE</span></nav>
+    <nav class="navigation" aria-label="Presentation navigation"><button id="previous" aria-label="Previous slide">←</button><span id="counter">01 / 23</span><button id="next" aria-label="Next slide">→</button></nav>
+    <div id="progress" aria-hidden="true"></div>
+    <p id="status" class="sr-only" role="status"></p>
+    <noscript><div class="no-script">Enable JavaScript to explore the deck.</div></noscript>
+  </div>
+</body>
+</html>

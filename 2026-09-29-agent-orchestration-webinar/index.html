@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#0b0f14">
+  <title>Agent orchestration: from one chat to a system of work</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600&display=swap">
+  <link rel="stylesheet" href="https://unpkg.com/@vscode/codicons/dist/codicon.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="atmosphere" aria-hidden="true"></div>
+  <div class="progress-track" aria-hidden="true"><div class="progress" id="progress"></div></div>
+
+  <header class="deck-chrome">
+    <div class="slide-counter"><strong id="currentSlide">01</strong><span>/</span><span id="totalSlides">00</span></div>
+  </header>
+
+  <main id="slides-container" aria-label="Agent orchestration webinar presentation"></main>
+
+  <dialog class="jump-overlay" id="jumpOverlay" aria-label="Jump to a chapter">
+    <div class="overlay-head">
+      <span class="eyebrow">Navigation</span>
+      <button id="closeOverlay" aria-label="Close navigation">×</button>
+    </div>
+    <h2>Jump to a chapter.</h2>
+    <nav id="chapterNav" class="chapter-nav" aria-label="Presentation chapters"></nav>
+    <p class="overlay-help">Arrow keys navigate. <kbd>Esc</kbd> closes this panel.</p>
+  </dialog>
+
+  <script src="slides.js"></script>
+  <script src="presentation.js"></script>
+</body>
+</html>

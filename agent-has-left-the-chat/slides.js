@@ -138,20 +138,43 @@ window.SLIDES = [
     "\"Your project docs and your workflows now move between agents.\""
   ]),
 
-  S('mcp', 'Four standards', 50, 'psu', {
+  S('mcp', 'Four standards', 40, 'psu', {
     "title": "MCP lets you build a Slack integration once, sign-in included",
     "math": "M × N → M + N",
     "problem": "Every AI app built its own Slack, database, and browser integration, including sign-in.",
     "spec": "A server exposes tools, resources, and prompts over one protocol, with standard OAuth.",
     "unlocked": "You build the Slack server once, and every MCP client can use it.",
     "know": [
-      "MCP authorization uses OAuth 2.1 for remote servers. Each client still signs in on its own; the server is built once.",
-      "Backup slide on the 2026-07-28 MCP revision is in the appendix."
+      "MCP authorization uses OAuth 2.1 for remote servers. Each client still signs in on its own; the server is built once."
     ]
   }, [
     "Same M × N story as LSP, one layer over. This time it's agents and the tools and data they act on.",
     "Sign-in is often the hard part of a real integration. MCP standardizes that too.",
-    "MCP keeps moving. The 2026-07-28 revision drops protocol sessions, so servers scale like stateless web services. Long-running work moves to Tasks.",
+    "→ \"And MCP keeps moving.\""
+  ], [SRC.mcp]),
+
+  S('mcp-next', 'Four standards', 45, 'list', {
+    "title": "The next MCP spec drops protocol sessions",
+    "items": [
+      {
+        "h": "No session handshake",
+        "p": "Every request carries its own version and capabilities."
+      },
+      {
+        "h": "Long-running work moves to Tasks",
+        "p": "An official extension handles work that outlasts one request."
+      },
+      {
+        "h": "Servers ask for input in the result",
+        "p": "They return input_required instead of calling the client back."
+      }
+    ],
+    "know": [
+      "Details: no initialize handshake and no Mcp-Session-Id; Tasks moved into an official extension; servers return input_required instead of calling back into the client."
+    ]
+  }, [
+    "People call it \"MCP 2.0\". The official name is the 2026-07-28 revision.",
+    "The headline: MCP removed sessions from the protocol. Servers scale like stateless web services. Long-running work moves into Tasks.",
     "\"Tools got easier to scale. The agent calling them still holds the state.\" Hold that thought.",
     "→ \"Tools are portable. Next, whole workflows.\""
   ], [SRC.mcp]),
@@ -357,7 +380,35 @@ window.SLIDES = [
     'Keep the host running. Closing a client is not shutting down the machine that executes the agent.'
   ]),
 
-  S('shared-control', 'Shared sessions', 100, 'list', {
+  S('capabilities', 'Shared sessions', 60, 'section', {
+    "title": "Every client gets the whole session",
+    "lede": "See the work. Answer approvals. Review changes.",
+    "items": [
+      {
+        "h": "Conversations",
+        "p": "Turns, side chats, subagents"
+      },
+      {
+        "h": "Workspace",
+        "p": "Folders, setup, file changes"
+      },
+      {
+        "h": "Tools",
+        "p": "Calls, approvals, MCP status"
+      },
+      {
+        "h": "Live work",
+        "p": "Terminals and progress"
+      }
+    ]
+  }, [
+    "What you just saw needs more than a transcript. A client needs what's running, what changed, and what needs a person.",
+    "AHP exposes each of these as a channel. Clients subscribe only to what they show.",
+    "\"That's why a client you write can show which session needs you, without knowing which agent runs it.\"",
+    "→ \"And it has to keep working when people come and go.\""
+  ], [SRC.ahp]),
+
+  S('shared-control', 'Shared sessions', 90, 'list', {
     "title": "Pick up a running session from any device, even after you drop off",
     "items": [
       {
@@ -378,8 +429,7 @@ window.SLIDES = [
       "Do not promise transparent failover or exactly-once effects across host restarts."
     ]
   }, [
-    "That demo worked because of three things.",
-    "A transcript isn't enough. Clients also see what's running, what changed, and what needs a person, each as its own channel.",
+    "Three things make this work across devices.",
     "Join. A new client gets a snapshot, then ordered actions.",
     "Act. Clients apply actions locally, and the host orders them and rejects stale ones. An approval can't be answered twice.",
     "Reconnect. The host replays from the client's last sequence number, or sends a fresh snapshot.",
@@ -421,14 +471,83 @@ window.SLIDES = [
     ],
     "footer": "Every change came from a problem VS Code hit.",
     "know": [
-      "Version numbers are context. The audience does not need to remember them.",
-      "Backup slides in the appendix: the 0.4 session and chat split, MCP server status (0.3, 1.0), and Automations (0.9)."
+      "Version numbers are context. The audience does not need to remember them."
     ]
   }, [
     "\"Every change came from a problem VS Code hit.\"",
-    "One example in passing: subagents broke the one-transcript model, so 0.4 split chats out of sessions.",
-    "Then tell the story that shows it best."
+    "Four quick stories, each a thing that broke. The last one is my favorite."
   ], [SRC.changelog]),
+
+  S('split', 'How the spec changed', 60, 'split', {
+    "title": "One session needed more than one conversation",
+    "left": {
+      "h": "One transcript",
+      "items": [
+        "Lead agent and workers in one stream",
+        "Separate sessions lost shared context"
+      ]
+    },
+    "right": {
+      "h": "One session, separate chats",
+      "items": [
+        "One chat per agent",
+        "One shared workspace and setup",
+        "Fork or move a single chat"
+      ]
+    },
+    "know": [
+      "A single-chat harness still exposes one default chat. Harnesses do not have to delegate the same way."
+    ]
+  }, [
+    "Subagents broke the model. One transcript becomes unreadable, and separate sessions lose shared context.",
+    "Version 0.4 split chats out of sessions. That gave us side chats, forking, and moving a chat between sessions.",
+    "→ \"The next one broke for a different reason.\""
+  ], [SRC.multiChat, SRC.changelog]),
+
+  S('mcp-state', 'How the spec changed', 60, 'list', {
+    "title": "Every client needs to see MCP server status",
+    "items": [
+      {
+        "h": "Starting or ready",
+        "p": "The host reports live status, not only the config."
+      },
+      {
+        "h": "Needs sign-in or failed",
+        "p": "Any client can show what blocks the session."
+      },
+      {
+        "h": "A turn waits for startup",
+        "p": "The session shows the wait instead of looking stuck."
+      }
+    ],
+    "know": [
+      "Portable config has limits: interactive variables, env files, working directories, and OAuth config."
+    ]
+  }, [
+    "A config entry cannot tell another machine that a server crashed or needs sign-in.",
+    "MCP status became session state. Every client sees starting, ready, needs sign-in, or failed.",
+    "The host owns the MCP connection. Clients do not open competing ones.",
+    "→ \"And sometimes nobody is connected at all.\""
+  ], [SRC.changelog]),
+
+  S('automations', 'How the spec changed', 55, 'psu', {
+    "title": "Automations run without an editor open",
+    "labels": [
+      "The problem",
+      "What we changed",
+      "What you get"
+    ],
+    "problem": "A scheduled task can't wait for someone to open an editor.",
+    "spec": "The host owns schedules, runs, history, and recovery.",
+    "unlocked": "Work starts on schedule. You review the result later, from any client.",
+    "know": [
+      "Local schedules still need the host running and the machine awake. GitHub cloud automations are a separate path."
+    ]
+  }, [
+    "Scheduled work can't wait for an editor to open.",
+    "The host owns schedules, runs, and history. You reconnect later, from any client, to review the result.",
+    "→ \"The hardest one was getting your setup there in the first place.\""
+  ], [SRC.pr(331796), SRC.pr(341542), SRC.pr(342037)]),
 
   S('customizations', 'How the spec changed', 65, 'psu', {
     "title": "Your setup has to reach the remote host",
@@ -444,7 +563,7 @@ window.SLIDES = [
       "Bundles are content-hashed. Workspace-scoped settings stay isolated so windows do not overwrite each other. Hooks keep harness-specific rules."
     ]
   }, [
-    "Copying files was the easy part. Agreeing on identity and scope was the hard part.",
+    "Your skills and agents live on your laptop. The session runs somewhere else. Copying files was the easy part. Agreeing on identity and scope was the hard part.",
     "War story. One cloud quick chat produced 702 and 355 sync updates in a single turn. A publisher had mistaken the host's /root scratch folder for a workspace. The fix brought it to 5 and 10.",
     "\"The spec grew out of real product failures. Build on it, and you get those lessons for free.\"",
     "→ \"So where does AHP fit next to the other agent protocols?\""
@@ -633,56 +752,6 @@ window.SLIDES = [
     "They stack: an agent in an AHP session can delegate to an A2A agent."
   ]),
 
-  S('split', 'Appendix', 60, 'split', {
-    "title": "One session needed more than one conversation",
-    "left": {
-      "h": "One transcript",
-      "items": [
-        "Lead agent and workers in one stream",
-        "Separate sessions lost shared context"
-      ]
-    },
-    "right": {
-      "h": "One session, separate chats",
-      "items": [
-        "One chat per agent",
-        "One shared workspace and setup",
-        "Fork or move a single chat"
-      ]
-    },
-    "know": [
-      "A single-chat harness still exposes one default chat. Harnesses do not have to delegate the same way."
-    ]
-  }, [
-    "Subagents broke the model. One transcript becomes unreadable, and separate sessions lose shared context.",
-    "Version 0.4 split chats out of sessions. That gave us side chats, forking, and moving a chat between sessions."
-  ], [SRC.multiChat, SRC.changelog]),
-
-  S('mcp-next', 'Appendix', 45, 'list', {
-    "title": "The next MCP spec drops protocol sessions",
-    "items": [
-      {
-        "h": "No session handshake",
-        "p": "Every request carries its own version and capabilities."
-      },
-      {
-        "h": "Long-running work moves to Tasks",
-        "p": "An official extension handles work that outlasts one request."
-      },
-      {
-        "h": "Servers ask for input in the result",
-        "p": "They return input_required instead of calling the client back."
-      }
-    ],
-    "know": [
-      "Details: no initialize handshake and no Mcp-Session-Id; Tasks moved into an official extension; servers return input_required instead of calling back into the client."
-    ]
-  }, [
-    "People call it \"MCP 2.0\". The official name is the 2026-07-28 revision.",
-    "The headline: MCP removed sessions from the protocol. Servers scale like stateless web services. Long-running work moves into Tasks.",
-    "\"Tools got easier to scale. But the agent calling them is still stateful. Where does that state live?\""
-  ], [SRC.mcp]),
-
   S('vscode-move', 'Appendix', 45, 'timeline', {
     "title": "VS Code moved agents out of the extension host",
     "items": [
@@ -749,76 +818,5 @@ window.SLIDES = [
   }, [
     "Two layers, two jobs: the SDK runs the agent well; AHP makes the session reachable.",
     "AHP stays harness-agnostic. Claude and Codex adapters use the same contract without the Copilot runtime."
-  ], [SRC.ahp, SRC.harness]),
-
-  S('capabilities', 'Appendix', 60, 'section', {
-    "title": "Every client gets the whole session",
-    "lede": "See the work. Answer approvals. Review changes.",
-    "items": [
-      {
-        "h": "Conversations",
-        "p": "Turns, side chats, subagents"
-      },
-      {
-        "h": "Workspace",
-        "p": "Folders, setup, file changes"
-      },
-      {
-        "h": "Tools",
-        "p": "Calls, approvals, MCP status"
-      },
-      {
-        "h": "Live work",
-        "p": "Terminals and progress"
-      }
-    ]
-  }, [
-    "A transcript is not enough. A client needs what is running, what changed, and what needs a person.",
-    "AHP exposes each of these as a channel. Clients subscribe only to what they show.",
-    "\"That is why a client you write can show which session needs you, without knowing which agent runs it.\""
-  ], [SRC.ahp]),
-
-  S('mcp-state', 'Appendix', 60, 'list', {
-    "title": "Every client needs to see MCP server status",
-    "items": [
-      {
-        "h": "Starting or ready",
-        "p": "The host reports live status, not only the config."
-      },
-      {
-        "h": "Needs sign-in or failed",
-        "p": "Any client can show what blocks the session."
-      },
-      {
-        "h": "A turn waits for startup",
-        "p": "The session shows the wait instead of looking stuck."
-      }
-    ],
-    "know": [
-      "Portable config has limits: interactive variables, env files, working directories, and OAuth config."
-    ]
-  }, [
-    "A config entry cannot tell another machine that a server crashed or needs sign-in.",
-    "MCP status became session state. Every client sees starting, ready, needs sign-in, or failed.",
-    "The host owns the MCP connection. Clients do not open competing ones."
-  ], [SRC.changelog]),
-
-  S('automations', 'Appendix', 55, 'psu', {
-    "title": "Automations run without an editor open",
-    "labels": [
-      "The problem",
-      "What we changed",
-      "What you get"
-    ],
-    "problem": "A scheduled task can't wait for someone to open an editor.",
-    "spec": "The host owns schedules, runs, history, and recovery.",
-    "unlocked": "Work starts on schedule. You review the result later, from any client.",
-    "know": [
-      "Local schedules still need the host running and the machine awake. GitHub cloud automations are a separate path."
-    ]
-  }, [
-    "Scheduled work cannot wait for an editor to open.",
-    "The host owns schedules, runs, and history. You reconnect later to review the result.",
-    "\"The spec grew out of real product failures. Build on it, and you get those lessons for free.\""
-  ], [SRC.pr(331796), SRC.pr(341542), SRC.pr(342037)])
+  ], [SRC.ahp, SRC.harness])
 ];

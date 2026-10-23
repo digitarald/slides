@@ -313,7 +313,7 @@
               (k ? r(x + 200, 148 + k * 44, [70, 40, 96][k - 1], 12, k === 2 ? 'diff del' : 'diff add', 3) : '')).join(''),
             r(x + 24, 130, 277, 50, 'row', 10) + t(x + 44, 162, 'run_tests', 'sub mono', 'start') +
               `<g class="ask">${r(x + 24, 202, 168, 50, 'appr', 25)}${t(x + 108, 234, 'Approve', 'lbl ambert')}</g>` +
-              r(x + 24, 276, 230, 44, 'okpill', 22) + t(x + 46, 305, 'github · ready', 'sub mono mintt', 'start'),
+              r(x + 24, 276, 277, 44, 'okpill', 22) + t(x + 44, 305, 'supabase · ready', 'sub mono mintt', 'start'),
             r(x + 24, 124, 277, 186, 'term', 12) + t(x + 46, 166, '$ npm test', 'sub mono', 'start') +
               t(x + 46, 204, 'running', 'sub mono mintt', 'start') + r(x + 46, 240, 233, 8, 'track', 4) + r(x + 46, 240, 233, 8, 'prog', 4)
           ][i];
@@ -387,10 +387,10 @@
         `<g class="st${i === 1 ? ' on' : ''}" style="--d:${base + i * 2000}ms">${r(x, y, w, h, cls, h / 2)}${t(x + w / 2, y + h / 2 + (small ? 8 : 10), label, small ? 'sub' : 'lbl')}</g>`).join('');
       return side(`${h2(s)}${miniList(s.items)}`, svg('832 700', 'An MCP server status cycles through starting, ready, needs sign-in, and failed; every client shows the same state.', `
         ${A(r(30, 40, 772, 280, 'n blue host-core', 20) + t(60, 92, 'Agent host', 'hd bluet', 'start'), 0)}
-        ${A(r(70, 130, 692, 150, 'row', 14) + t(110, 218, 'github', 'big mono', 'start') + pill(440, 172, 290, 68, 0), 200)}
+        ${A(r(70, 130, 692, 150, 'row', 14) + t(110, 218, 'supabase', 'big mono', 'start') + pill(440, 172, 290, 68, 0), 200)}
         ${['M210 320V430', 'M622 320V430'].map((d, i) => flow(d, '', 500) + pk(d, '', 600 + i * 400)).join('')}
-        ${A(win(30, 430, 360, 230, 'Laptop') + t(60, 560, 'github', 'lbl mono', 'start') + pill(178, 526, 190, 52, 300, true), 400)}
-        ${A(win(442, 430, 360, 230, 'Another machine') + t(472, 560, 'github', 'lbl mono', 'start') + pill(590, 526, 190, 52, 300, true), 600)}`));
+        ${A(win(30, 430, 360, 230, 'Laptop') + t(210, 512, 'supabase', 'lbl mono') + pill(85, 540, 250, 52, 300, true), 400)}
+        ${A(win(442, 430, 360, 230, 'Another machine') + t(622, 512, 'supabase', 'lbl mono') + pill(497, 540, 250, 52, 300, true), 600)}`));
     },
 
     automations: (s) => stage(s, svg('1408 380', 'A schedule fires with no editor connected; the host runs and records each run; a client reviews the result later.', `

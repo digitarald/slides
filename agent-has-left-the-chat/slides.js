@@ -92,27 +92,34 @@ window.SLIDES = [
   ]),
 
   S('know-how', 'Four standards', 50, 'knowhow', {
-    "title": "AGENTS.md and Skills move your team's know-how between agents",
-    "files": [
-      "CLAUDE.md",
-      ".cursorrules",
-      "copilot-instructions.md"
-    ],
-    "formats": [
+    "title": "AGENTS.md and Skills give every agent the same project docs and workflows",
+    "specs": [
       {
         "h": "AGENTS.md",
-        "p": "Every time",
+        "what": "Project docs for agents",
+        "when": "Read every time",
+        "before": [
+          "CLAUDE.md",
+          ".cursorrules",
+          "copilot-instructions.md"
+        ],
         "rows": [
-          "Build and test commands",
+          "How to build and test",
           "Code style",
           "Repo conventions"
         ]
       },
       {
-        "h": "SKILL.md",
-        "p": "On demand",
+        "h": "Agent Skills",
+        "what": "Reusable workflows",
+        "when": "Loaded on demand",
+        "before": [
+          "Pasted prompts",
+          "Custom commands",
+          "Agent-specific workflows"
+        ],
         "rows": [
-          "review-pr/ instructions",
+          "review-pr/SKILL.md",
           "scripts/",
           "references/"
         ]
@@ -123,16 +130,12 @@ window.SLIDES = [
       "Codex",
       "Other agents"
     ],
-    "footer": "Every compatible agent reads the same files.",
-    "know": [
-      "AGENTS.md is supported by Copilot, Codex, Cursor, Jules, Gemini CLI, Zed, and others (agents.md). Claude Code reads CLAUDE.md, so the slide does not name it.",
-      "Agent Skills are supported by Copilot, Claude Code, Codex, and others."
-    ]
+    "footer": "Two open formats. Write them once, and every compatible agent reads them."
   }, [
-    "How your team works lived in each agent's own file. Switch agents, and you rewrite it.",
-    "Two open formats fixed that. AGENTS.md holds what an agent reads every time, like how to build, test, and follow your conventions.",
-    "Skills hold whole workflows. Only the description loads up front. The instructions, scripts, and references load when the task needs them.",
-    "\"Workflows became transferable between agents.\""
+    "Two standards for two kinds of know-how.",
+    "AGENTS.md is the README for agents: how to build, test, and follow your conventions. It replaced a different instructions file for every agent.",
+    "Skills are reusable workflows, like reviewing a PR. Before, they were pasted prompts or tool-specific commands. Only a skill's description loads up front. The instructions, scripts, and references load when the task needs them.",
+    "\"Your project docs and your workflows now move between agents.\""
   ]),
 
   S('mcp', 'Four standards', 50, 'psu', {
@@ -386,7 +389,7 @@ window.SLIDES = [
     'Use a prepared capture without credentials or unrelated work. The inspector is a log viewer, not another live control client.'
   ]),
 
-  S('s4-intro', 'How the spec changed', 40, 'timeline', {
+  S('s4-intro', 'How the spec changed', 45, 'timeline', {
     "title": "AHP went from 0.2 to 1.0 in four months",
     "items": [
       {
@@ -419,37 +422,13 @@ window.SLIDES = [
     "footer": "Every change came from a problem VS Code hit.",
     "know": [
       "Version numbers are context. The audience does not need to remember them.",
-      "Backup stories in the appendix: MCP server status (0.3, 1.0) and Automations (0.9)."
+      "Backup slides in the appendix: the 0.4 session and chat split, MCP server status (0.3, 1.0), and Automations (0.9)."
     ]
   }, [
     "\"Every change came from a problem VS Code hit.\"",
-    "Tell two stories: one session with many conversations, and your setup on a remote host."
+    "One example in passing: subagents broke the one-transcript model, so 0.4 split chats out of sessions.",
+    "Then tell the story that shows it best."
   ], [SRC.changelog]),
-
-  S('split', 'How the spec changed', 60, 'split', {
-    "title": "One session needed more than one conversation",
-    "left": {
-      "h": "One transcript",
-      "items": [
-        "Lead agent and workers in one stream",
-        "Separate sessions lost shared context"
-      ]
-    },
-    "right": {
-      "h": "One session, separate chats",
-      "items": [
-        "One chat per agent",
-        "One shared workspace and setup",
-        "Fork or move a single chat"
-      ]
-    },
-    "know": [
-      "A single-chat harness still exposes one default chat. Harnesses do not have to delegate the same way."
-    ]
-  }, [
-    "Subagents broke the model. One transcript becomes unreadable, and separate sessions lose shared context.",
-    "Version 0.4 split chats out of sessions. That gave us side chats, forking, and moving a chat between sessions."
-  ], [SRC.multiChat, SRC.changelog]),
 
   S('customizations', 'How the spec changed', 65, 'psu', {
     "title": "Your setup has to reach the remote host",
@@ -468,74 +447,43 @@ window.SLIDES = [
     "Copying files was the easy part. Agreeing on identity and scope was the hard part.",
     "War story. One cloud quick chat produced 702 and 355 sync updates in a single turn. A publisher had mistaken the host's /root scratch folder for a workspace. The fix brought it to 5 and 10.",
     "\"The spec grew out of real product failures. Build on it, and you get those lessons for free.\"",
-    "→ \"So how does this compare to other agent protocols?\""
+    "→ \"So where does AHP fit next to the other agent protocols?\""
   ], [SRC.pr(327946), SRC.pr(340564)]),
 
-  S('s5-intro', 'Comparisons', 30, 'arrows', {
-    "title": "Which part are you connecting?",
+  S('s5-intro', 'Comparisons', 75, 'arrows', {
+    "title": "Where AHP fits next to ACP and A2A",
     "rows": [
       {
         "proto": "ACP",
         "from": "One client",
-        "to": "One agent harness"
+        "to": "One agent harness",
+        "diff": "Embeds one agent in one editor"
       },
       {
         "proto": "AHP",
         "from": "Many clients",
         "to": "A host running sessions",
+        "diff": "Adds joining live work, shared approvals, and reconnecting",
         "hot": true
       },
       {
         "proto": "A2A",
         "from": "An agent",
-        "to": "Another agent system"
+        "to": "Another agent system",
+        "diff": "Hands off a task and gets back results"
       }
-    ]
-  }, [
-    "Compare boundaries, not feature lists.",
-    "ACP: one client to one agent. AHP: many clients around shared sessions. A2A: an agent to another agent system.",
-    "→ Start with the closest one, ACP."
-  ]),
-
-  S('acp', 'Comparisons', 60, 'compare', {
-    "title": "ACP vs AHP",
-    "cols": [
-      "",
-      "ACP",
-      "AHP"
-    ],
-    "rows": [
-      [
-        "Connection",
-        "One client ↔ one harness",
-        "Many clients ↔ one host"
-      ],
-      [
-        "A second client joins",
-        "Your app has to build it",
-        "It gets a snapshot of the live session"
-      ],
-      [
-        "Two clients act",
-        "The app coordinates them",
-        "The host orders and reconciles actions"
-      ],
-      [
-        "Connection drops",
-        "Load or resume the session",
-        "Replay missed actions, or start from a snapshot"
-      ]
     ],
     "know": [
-      "This compares stable ACP v1. ACP v2 is a draft exploring multi-client observation.",
-      "One ACP connection can manage several sessions; it is still one client.",
-      "Do not mention any vendor's private plans."
+      "This compares stable ACP v1. ACP v2 is a draft exploring multi-client observation. One ACP connection can manage several sessions; it is still one client.",
+      "Don't mention any vendor's private plans.",
+      "Detailed ACP vs AHP and A2A vs AHP tables are in the appendix for questions."
     ]
   }, [
-    "ACP is good at what it was built for: embedding an agent in an editor.",
-    "AHP adds what a second client needs: joining live work, concurrent actions, recovery after a disconnect, shared approvals.",
-    "You can build those around ACP. AHP puts them in the contract.",
-    "→ \"And the two combine.\""
+    "Compare what each protocol connects, not feature lists.",
+    "ACP is good at what it was built for: one agent in one editor. A second client needs more: joining live work, ordering actions from several clients, recovering after a disconnect. You can build that around ACP. AHP puts it in the contract.",
+    "A2A hands work to an independent agent system. You get tasks and artifacts back, not its internals. AHP is for watching and steering your own sessions.",
+    "\"They stack. And ACP agents don't have to pick a side.\"",
+    "→ Gateway."
   ], [SRC.acp]),
 
   S('gateway', 'Comparisons', 45, 'gateway', {
@@ -566,47 +514,9 @@ window.SLIDES = [
   }, [
     "Brand new. The AHP docs started listing this community project on October 16.",
     "\"You don't have to replace an agent's ACP integration. A gateway can use ACP to run the agent and AHP to expose its sessions to multiple clients.\"",
-    "It proves the point of the talk: the agent and the interface are independent choices."
-  ], [SRC.gateway, SRC.gatewayDocs]),
-
-  S('a2a', 'Comparisons', 50, 'compare', {
-    "title": "A2A vs AHP",
-    "cols": [
-      "",
-      "A2A",
-      "AHP"
-    ],
-    "rows": [
-      [
-        "Connects",
-        "An agent to another agent system",
-        "Clients to sessions on a host"
-      ],
-      [
-        "Work",
-        "Tasks, messages, artifacts",
-        "Sessions, chats, approvals, changes"
-      ],
-      [
-        "You see",
-        "The Agent Card and task results",
-        "The session state a client needs"
-      ],
-      [
-        "Use it to",
-        "Hand work to another system",
-        "Watch and steer running work"
-      ]
-    ],
-    "know": [
-      "The AHP plus A2A combination is an architecture possibility, not a shipped integration."
-    ]
-  }, [
-    "A2A delegates to an independent agent system. You get tasks and artifacts, not its internals.",
-    "AHP is for observing and steering your own sessions.",
-    "They stack: an agent in an AHP session can delegate to an A2A agent.",
+    "It proves the point of the talk: the agent and the interface are independent choices.",
     "→ \"Enough contract. Here is what it lets us build.\""
-  ]),
+  ], [SRC.gateway, SRC.gatewayDocs]),
 
   S('s6-intro', 'Live demonstrations', 20, 'statement', {
     "title": "The next agent UI doesn't have to look like an editor",
@@ -644,6 +554,109 @@ window.SLIDES = [
   }, [
     "Stop at the close. These slides are for questions and future revisions."
   ]),
+
+  S('acp', 'Appendix', 60, 'compare', {
+    "title": "ACP vs AHP",
+    "cols": [
+      "",
+      "ACP",
+      "AHP"
+    ],
+    "rows": [
+      [
+        "Connection",
+        "One client ↔ one harness",
+        "Many clients ↔ one host"
+      ],
+      [
+        "A second client joins",
+        "Your app has to build it",
+        "It gets a snapshot of the live session"
+      ],
+      [
+        "Two clients act",
+        "The app coordinates them",
+        "The host orders and reconciles actions"
+      ],
+      [
+        "Connection drops",
+        "Load or resume the session",
+        "Replay missed actions, or start from a snapshot"
+      ]
+    ],
+    "know": [
+      "This compares stable ACP v1. ACP v2 is a draft exploring multi-client observation.",
+      "One ACP connection can manage several sessions; it is still one client.",
+      "Do not mention any vendor's private plans."
+    ]
+  }, [
+    "ACP is good at what it was built for: embedding an agent in an editor.",
+    "AHP adds what a second client needs: joining live work, concurrent actions, recovery after a disconnect, shared approvals.",
+    "You can build those around ACP. AHP puts them in the contract."
+  ], [SRC.acp]),
+
+  S('a2a', 'Appendix', 50, 'compare', {
+    "title": "A2A vs AHP",
+    "cols": [
+      "",
+      "A2A",
+      "AHP"
+    ],
+    "rows": [
+      [
+        "Connects",
+        "An agent to another agent system",
+        "Clients to sessions on a host"
+      ],
+      [
+        "Work",
+        "Tasks, messages, artifacts",
+        "Sessions, chats, approvals, changes"
+      ],
+      [
+        "You see",
+        "The Agent Card and task results",
+        "The session state a client needs"
+      ],
+      [
+        "Use it to",
+        "Hand work to another system",
+        "Watch and steer running work"
+      ]
+    ],
+    "know": [
+      "The AHP plus A2A combination is an architecture possibility, not a shipped integration."
+    ]
+  }, [
+    "A2A delegates to an independent agent system. You get tasks and artifacts, not its internals.",
+    "AHP is for observing and steering your own sessions.",
+    "They stack: an agent in an AHP session can delegate to an A2A agent."
+  ]),
+
+  S('split', 'Appendix', 60, 'split', {
+    "title": "One session needed more than one conversation",
+    "left": {
+      "h": "One transcript",
+      "items": [
+        "Lead agent and workers in one stream",
+        "Separate sessions lost shared context"
+      ]
+    },
+    "right": {
+      "h": "One session, separate chats",
+      "items": [
+        "One chat per agent",
+        "One shared workspace and setup",
+        "Fork or move a single chat"
+      ]
+    },
+    "know": [
+      "A single-chat harness still exposes one default chat. Harnesses do not have to delegate the same way."
+    ]
+  }, [
+    "Subagents broke the model. One transcript becomes unreadable, and separate sessions lose shared context.",
+    "Version 0.4 split chats out of sessions. That gave us side chats, forking, and moving a chat between sessions."
+  ], [SRC.multiChat, SRC.changelog]),
 
   S('mcp-next', 'Appendix', 45, 'list', {
     "title": "The next MCP spec drops protocol sessions",

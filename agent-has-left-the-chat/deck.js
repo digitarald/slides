@@ -114,26 +114,30 @@
           return A(box(Z[2] + 287, y, 150, 56, e), 1700 + i * 120) + flow(d, 'mint', 1700) + pk(d, 'mint', 1900 + i * 300);
         }).join('')}`, 'fixed'), psuCaps(s)),
 
-    'know-how': (s) => stage(s, svg('1408 470', 'Agent-specific instruction files converge into AGENTS.md for always-on guidance and SKILL.md folders for on-demand workflows, which compatible agents read.', `
-        ${A(t(160, 30, 'One file per agent', 'sub'), 0)}
-        ${s.files.map((doc, i) => {
-          const y = 60 + i * 120;
-          const d = `M330 ${y + 30}C420 ${y + 30} 420 ${i === 2 ? 340 : 140} 500 ${i === 2 ? 340 : 140}`;
-          return A(box(0, y, 330, 60, doc, '', '', 'sub mono'), i * 150) + flow(d, '', 600) + pk(d, '', 700 + i * 350);
+    'know-how': (s) => stage(s, svg('1408 470', 'Two open standards. AGENTS.md replaces agent-specific instruction files with one set of project docs. Agent Skills replace pasted prompts and custom commands with reusable workflows. Compatible agents read both.', `
+        ${A(t(130, 22, 'Before: one per agent', 'sub'), 0)}
+        ${A(t(1269, 22, 'Any compatible agent', 'sub'), 1500)}
+        ${s.specs.map((spec, i) => {
+          const y = 40 + i * 225;
+          const tone = i ? 'mint' : 'blue';
+          const spec_ = A(r(400, y, 560, 200, `n ${tone}`, 18) +
+            t(430, y + 48, spec.h, 'hd', 'start') + t(930, y + 48, spec.when, `sub ${i ? 'mintt' : 'bluet'}`, 'end') +
+            t(430, y + 80, spec.what, 'sub', 'start') + p(`M400 ${y + 98}H960`, 'hair') +
+            spec.rows.map((row, k) => c(444, y + 130 + k * 28, 5, `nd ${i ? 'mintfill' : 'bluefill'}`) +
+              t(462, y + 137 + k * 28, row, `sub${row.includes('/') ? ' mono' : ''}`, 'start')).join(''), 600 + i * 300);
+          const before = spec.before.map((label, k) => {
+            const by = y + 18 + k * 58;
+            const d = `M260 ${by + 22}C330 ${by + 22} 330 ${y + 100} 400 ${y + 100}`;
+            return A(box(0, by, 260, 44, label, '', 'loose', 'sub'), 100 + i * 300 + k * 90) + flow(d, i ? 'mint' : '', 700 + i * 300) + pk(d, i ? 'mint' : '', 900 + i * 300 + k * 350);
+          }).join('');
+          return before + spec_;
         }).join('')}
-        ${s.formats.map((f, i) => {
-          const y = 40 + i * 210;
-          return A(r(500, y, 400, 190, `n ${i ? 'mint' : 'blue'}`, 16) + t(530, y + 46, f.h, 'hd mono', 'start') +
-            t(870, y + 46, f.p, `sub ${i ? 'mintt' : 'bluet'}`, 'end') + p(`M500 ${y + 66}H900`, 'hair') +
-            f.rows.map((row, k) => c(544, y + 98 + k * 34, 5, `nd ${i ? 'mintfill' : 'bluefill'}`) + t(562, y + 105 + k * 34, row, 'sub', 'start')).join(''), 700 + i * 250);
-        }).join('')}
-        ${A(t(1269, 30, 'Any compatible agent', 'sub'), 1400)}
-        ${s.agents.map((agent, i) => {
-          const y = 60 + i * 120;
-          const dA = `M900 135C1010 135 1010 ${y + 30} 1130 ${y + 30}`;
-          const dS = `M900 345C1010 345 1010 ${y + 30} 1130 ${y + 30}`;
-          return flow(dA, '', 1300) + flow(dS, 'mint', 1300) + pk(dA, '', 1500 + i * 300) + pk(dS, 'mint', 1800 + i * 300) +
-            A(box(1130, y, 278, 60, agent, '', i === 2 ? 'dash' : ''), 1400 + i * 150);
+        ${s.agents.map((agent, k) => {
+          const y = 60 + k * 125;
+          const dA = `M960 140C1050 140 1040 ${y + 30} 1130 ${y + 30}`;
+          const dS = `M960 365C1050 365 1040 ${y + 30} 1130 ${y + 30}`;
+          return flow(dA, '', 1400) + flow(dS, 'mint', 1400) + pk(dA, '', 1600 + k * 300) + pk(dS, 'mint', 1900 + k * 300) +
+            A(box(1130, y, 278, 60, agent, '', k === 2 ? 'dash' : ''), 1500 + k * 150);
         }).join('')}`),
       footer(s)),
 
@@ -401,19 +405,20 @@
         ${A(t(Z[2] + 220, 278, 'Review the result', 'lbl'), 2000)}`, 'fixed'),
       psuCaps(s)),
 
-    's5-intro': (s) => stage(s, svg('1408 480', 'ACP connects one client to one harness; AHP connects many clients to a host; A2A connects an agent to another agent system.', s.rows.map((row, i) => {
-        const y = 20 + i * 155;
-        const yc = y + 65;
+    's5-intro': (s) => stage(s, svg('1408 500', 'ACP connects one client to one harness and embeds an agent in an editor. AHP connects many clients to a host and adds joining live work, shared approvals, and reconnecting. A2A connects an agent to another agent system to hand off tasks.', s.rows.map((row, i) => {
+        const y = 10 + i * 165;
+        const yc = y + 52;
         const topo = [
           c(560, yc, 16, 'nd') + flow(`M576 ${yc}H824`) + pk(`M576 ${yc}H824`, '', 600) + c(840, yc, 16, 'nd'),
-          [-40, 0, 40].map((o, k) => {
+          [-36, 0, 36].map((o, k) => {
             const d = `M573 ${yc + o}C690 ${yc + o} 700 ${yc} 810 ${yc}`;
-            return c(560, yc + o, 13, 'nd') + flow(d) + pk(d, '', 700 + k * 450);
-          }).join('') + r(810, yc - 32, 74, 64, 'n blue', 12),
-          c(560, yc, 16, 'nd') + flow(`M576 ${yc}H810`) + pk(`M576 ${yc}H810`, '', 900) + r(810, yc - 32, 74, 64, 'opaque', 12) + t(847, yc + 10, '?', 'lbl dimt')
+            return c(560, yc + o, 12, 'nd') + flow(d) + pk(d, '', 700 + k * 450);
+          }).join('') + r(810, yc - 30, 74, 60, 'n blue', 12),
+          c(560, yc, 16, 'nd') + flow(`M576 ${yc}H810`) + pk(`M576 ${yc}H810`, '', 900) + r(810, yc - 30, 74, 60, 'opaque', 12) + t(847, yc + 10, '?', 'lbl dimt')
         ][i];
-        return A((row.hot ? r(0, y, 1408, 130, 'hotrow', 18) : '') + t(40, yc + 13, row.proto, `ver${row.hot ? '' : ' dimt'}`, 'start') +
-          t(200, yc + 9, row.from, 'lbl', 'start') + topo + t(940, yc + 9, row.to, 'lbl', 'start'), i * 260);
+        return A((row.hot ? r(0, y, 1408, 150, 'hotrow', 18) : '') + t(40, yc + 13, row.proto, `ver${row.hot ? '' : ' dimt'}`, 'start') +
+          t(200, yc + 9, row.from, 'lbl', 'start') + topo + t(940, yc + 9, row.to, 'lbl', 'start') +
+          tl(940, yc + 50, row.diff, 44, `sub${row.hot ? ' bluet' : ''}`, 'start', 28), i * 260);
       }).join(''))),
 
   };

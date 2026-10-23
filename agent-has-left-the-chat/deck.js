@@ -540,6 +540,24 @@
   document.querySelectorAll('.frame-wrap').forEach((wrap) => resizeObserver.observe(wrap));
   if (notesRoot) requestAnimationFrame(() => heroes.forEach((hero) => hero.still()));
 
+  // Notes page: hide slide previews for phone use. Saved per device; ?previews=off forces it on load.
+  const previewToggle = document.getElementById('hidePreviews');
+  if (previewToggle) {
+    const KEY = 'ahp-notes-hide-previews';
+    const query = new URLSearchParams(location.search).get('previews');
+    const apply = (hide) => {
+      document.body.classList.toggle('no-previews', hide);
+      previewToggle.checked = hide;
+    };
+    apply(query ? query === 'off' : localStorage.getItem(KEY) === '1');
+    previewToggle.addEventListener('change', () => {
+      localStorage.setItem(KEY, previewToggle.checked ? '1' : '0');
+      apply(previewToggle.checked);
+      // Previews were hidden at their last size, so redraw the title animation when they return.
+      if (!previewToggle.checked) requestAnimationFrame(() => heroes.forEach((hero) => hero.still()));
+    });
+  }
+
   const countUp = (page) => {
     if (reduce.matches) return;
     page.querySelectorAll('[data-count]').forEach((el) => {

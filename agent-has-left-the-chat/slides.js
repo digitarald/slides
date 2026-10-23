@@ -136,45 +136,22 @@ window.SLIDES = [
     "\"Workflows became transferable between agents.\""
   ]),
 
-  S('mcp', 'Four standards', 40, 'psu', {
+  S('mcp', 'Four standards', 50, 'psu', {
     "title": "MCP: write a tool integration once",
     "math": "M × N → M + N",
     "problem": "Every AI app built its own Slack, database, and browser integration, including sign-in.",
     "spec": "A server exposes tools, resources, and prompts over one protocol, with standard OAuth.",
     "unlocked": "Build the Slack server once. Every MCP client can use it.",
     "know": [
-      "MCP authorization uses OAuth 2.1 for remote servers. Each client still signs in on its own; the server is built once."
+      "MCP authorization uses OAuth 2.1 for remote servers. Each client still signs in on its own; the server is built once.",
+      "Backup slide on the 2026-07-28 MCP revision is in the appendix."
     ]
   }, [
     "Same M × N story as LSP, one layer over: agents and the tools and data they act on.",
     "The hard part of a real integration is often sign-in. MCP standardizes that too.",
     "Build the Slack server, with its sign-in, once. Any MCP client can call it.",
-    "→ \"And MCP keeps moving.\""
-  ]),
-
-  S('mcp-next', 'Four standards', 45, 'list', {
-    "title": "The next MCP spec drops protocol sessions",
-    "items": [
-      {
-        "h": "No session handshake",
-        "p": "Every request carries its own version and capabilities."
-      },
-      {
-        "h": "Long-running work moves to Tasks",
-        "p": "An official extension handles work that outlasts one request."
-      },
-      {
-        "h": "Servers ask for input in the result",
-        "p": "They return input_required instead of calling the client back."
-      }
-    ],
-    "know": [
-      "Details: no initialize handshake and no Mcp-Session-Id; Tasks moved into an official extension; servers return input_required instead of calling back into the client."
-    ]
-  }, [
-    "People call it \"MCP 2.0\". The official name is the 2026-07-28 revision.",
-    "The headline: MCP removed sessions from the protocol. Servers scale like stateless web services. Long-running work moves into Tasks.",
-    "\"Tools got easier to scale. But the agent calling them is still stateful. Where does that state live?\""
+    "And MCP keeps moving. The 2026-07-28 revision drops protocol sessions: servers scale like stateless web services, and long-running work moves to Tasks.",
+    "→ \"Tools are portable. Next: whole workflows.\""
   ], [SRC.mcp]),
 
   S('plugins', 'Four standards', 50, 'psu', {
@@ -303,58 +280,22 @@ window.SLIDES = [
       "Browser",
       "Your client"
     ],
-    "footer": "The host keeps one copy of the truth. Every client stays in sync."
+    "footer": "The host keeps one copy of the truth. Every client stays in sync.",
+    "know": [
+      "VS Code 1.135 shipped the Agent Host with the Copilot SDK harness. AHP itself does not require a local process or Electron. Timeline slide is in the appendix."
+    ]
   }, [
     "The host owns session state. The harness owns the agent loop. Clients subscribe and send actions.",
     "A new client, like a browser on another device, joins the existing work. It does not start another agent or copy the session.",
+    "In VS Code, this meant moving agents out of the extension host, which lives and dies with a window. Say it during the demo: \"Close the editor. The work keeps going.\"",
     "→ \"Let me show you.\""
-  ], [SRC.ahp], [
+  ], [SRC.ahp, SRC.release(135)], [
     'Live continuity, about 2 minutes: start a session on the selected host, close the editor client, then join the same session from the Dev Box or second device through the prepared dev tunnel.',
     'Resolve a pending approval from the second client. Reopen the first client and show that it agrees.',
     'Keep the host running. Closing a client is not shutting down the machine that executes the agent.'
   ]),
 
-  S('vscode-move', 'Agent Host Protocol', 45, 'timeline', {
-    "title": "VS Code moved agents out of the extension host",
-    "items": [
-      {
-        "date": "Mar 6",
-        "tag": "State",
-        "text": "One shared session model"
-      },
-      {
-        "date": "Mar 16",
-        "tag": "Process",
-        "text": "Agent Host runs as its own process"
-      },
-      {
-        "date": "Mar 17",
-        "tag": "Remote",
-        "text": "Remote clients connect"
-      },
-      {
-        "date": "Aug 5",
-        "tag": "Sessions",
-        "text": "Copilot CLI sessions move to the host"
-      },
-      {
-        "date": "Aug 26",
-        "tag": "1.135",
-        "text": "Agent Host ships with the Copilot SDK",
-        "hot": true
-      }
-    ],
-    "footer": "Close the editor. The work keeps going.",
-    "know": [
-      "This is our implementation. AHP itself does not require a local process or Electron."
-    ]
-  }, [
-    "In VS Code, this meant moving agents out of the extension host, which lives and dies with a window.",
-    "Now the editor is just a client. VS Code 1.135 shipped the Agent Host with the Copilot SDK harness.",
-    "→ \"That move also put one harness behind all our Copilot experiences.\""
-  ], [SRC.pr(299839), SRC.pr(296627), SRC.pr(301140), SRC.pr(328512), SRC.release(135)]),
-
-  S('sdk', 'Agent Host Protocol', 45, 'radial', {
+  S('sdk', 'Agent Host Protocol', 55, 'radial', {
     "title": "Copilot SDK: one harness behind every Copilot surface",
     "surfaces": [
       "Copilot CLI",
@@ -365,8 +306,10 @@ window.SLIDES = [
     ],
     "caption": "Improve the harness once, and every surface gets better."
   }, [
+    "The VS Code host runs Copilot through the Copilot SDK, the same harness as the CLI.",
     "The harness decides which files to read, which tools to call, what context to keep, and how to recover. Most of agent quality lives there.",
     "Copilot CLI, the Copilot app, code review, and VS Code share it. Improve it once, every surface benefits.",
+    "\"The SDK runs the agent. AHP connects the clients.\" Two layers, two jobs, and AHP stays harness-agnostic: Claude and Codex adapters use the same contract.",
     "→ \"Sharing only helps if it is good. Same model, different harness:\""
   ], [SRC.harness]),
 
@@ -408,67 +351,11 @@ window.SLIDES = [
   }, [
     "How to read it: up means more tasks solved, left means cheaper.",
     "\"On the vendors' own models, a shared multi-model harness stays competitive.\"",
-    "Point at the numbers: GPT-5.5, about 74% vs 73% and cheaper. Opus 4.7, about 75% vs 73%, a few cents more per task."
+    "Point at the numbers: GPT-5.5, about 74% vs 73% and cheaper. Opus 4.7, about 75% vs 73%, a few cents more per task.",
+    "→ \"So what does a client actually get from AHP?\""
   ], [SRC.harness]),
 
-  S('layers', 'Agent Host Protocol', 45, 'compare', {
-    "title": "Shared runtime, shared protocol, different jobs",
-    "cols": [
-      "",
-      "Copilot SDK",
-      "Agent Host Protocol"
-    ],
-    "rows": [
-      [
-        "Job",
-        "Runs the agent loop",
-        "Connects clients to sessions"
-      ],
-      [
-        "Owns",
-        "Tools, context, model calls",
-        "The session state clients see"
-      ],
-      [
-        "Gives you",
-        "One harness for every Copilot product",
-        "Any agent, any interface"
-      ]
-    ]
-  }, [
-    "Two layers, two jobs: the SDK runs the agent well; AHP makes the session reachable.",
-    "AHP stays harness-agnostic. Claude and Codex adapters use the same contract without the Copilot runtime.",
-    "→ \"So what does a client actually get?\""
-  ], [SRC.ahp, SRC.harness]),
-
-  S('capabilities', 'Shared sessions', 60, 'section', {
-    "title": "Every client gets the whole session",
-    "lede": "See the work. Answer approvals. Review changes.",
-    "items": [
-      {
-        "h": "Conversations",
-        "p": "Turns, side chats, subagents"
-      },
-      {
-        "h": "Workspace",
-        "p": "Folders, setup, file changes"
-      },
-      {
-        "h": "Tools",
-        "p": "Calls, approvals, MCP status"
-      },
-      {
-        "h": "Live work",
-        "p": "Terminals and progress"
-      }
-    ]
-  }, [
-    "A transcript is not enough. A client needs what is running, what changed, and what needs a person.",
-    "AHP exposes each of these as a channel. Clients subscribe only to what they show.",
-    "\"That is why a client you write can show which session needs you, without knowing which agent runs it.\""
-  ], [SRC.ahp]),
-
-  S('shared-control', 'Shared sessions', 90, 'list', {
+  S('shared-control', 'Shared sessions', 100, 'list', {
     "title": "Join midway. Act from either client. Reconnect.",
     "items": [
       {
@@ -489,6 +376,7 @@ window.SLIDES = [
       "Do not promise transparent failover or exactly-once effects across host restarts."
     ]
   }, [
+    "A transcript is not enough. A client needs what is running, what changed, and what needs a person. AHP exposes each of these as a channel.",
     "These three are what made the demo work.",
     "Join: a snapshot, then ordered actions.",
     "Act: clients apply actions locally; the host orders them and rejects stale ones. An approval cannot be answered twice.",
@@ -499,7 +387,7 @@ window.SLIDES = [
     'Use a prepared capture without credentials or unrelated work. The inspector is a log viewer, not another live control client.'
   ]),
 
-  S('s4-intro', 'How the spec changed', 50, 'timeline', {
+  S('s4-intro', 'How the spec changed', 40, 'timeline', {
     "title": "AHP went from 0.2 to 1.0 in four months",
     "items": [
       {
@@ -531,11 +419,12 @@ window.SLIDES = [
     ],
     "footer": "Every change came from a problem VS Code hit.",
     "know": [
-      "Version numbers are context. The audience does not need to remember them."
+      "Version numbers are context. The audience does not need to remember them.",
+      "Backup stories in the appendix: MCP server status (0.3, 1.0) and Automations (0.9)."
     ]
   }, [
     "\"Every break in the spec came from something VS Code could not represent.\"",
-    "Four stories: multiple conversations, remote setup, MCP status, scheduled work."
+    "Two stories: one session with many conversations, and your setup on a remote host."
   ], [SRC.changelog]),
 
   S('split', 'How the spec changed', 60, 'split', {
@@ -563,7 +452,7 @@ window.SLIDES = [
     "Version 0.4 split chats out of sessions. That enabled side chats, forking, and moving chats."
   ], [SRC.multiChat, SRC.changelog]),
 
-  S('customizations', 'How the spec changed', 60, 'psu', {
+  S('customizations', 'How the spec changed', 65, 'psu', {
     "title": "Your setup has to reach the remote host",
     "labels": [
       "The problem",
@@ -579,53 +468,10 @@ window.SLIDES = [
   }, [
     "Problem: your skills and agents live on your laptop. The session runs somewhere else.",
     "Copying files was the easy part. Agreeing on identity and scope was the hard part.",
-    "War story: one cloud quick chat produced 702 and 355 sync updates in a single turn, because the host's /root scratch folder was mistaken for a workspace. The fix brought it to 5 and 10."
-  ], [SRC.pr(327946), SRC.pr(340564)]),
-
-  S('mcp-state', 'How the spec changed', 60, 'list', {
-    "title": "Every client needs to see MCP server status",
-    "items": [
-      {
-        "h": "Starting or ready",
-        "p": "The host reports live status, not just config."
-      },
-      {
-        "h": "Needs sign-in or failed",
-        "p": "Any client can show what blocks the session."
-      },
-      {
-        "h": "A turn waits for startup",
-        "p": "The session shows the wait instead of looking stuck."
-      }
-    ],
-    "know": [
-      "Portable config has limits: interactive variables, env files, working directories, and OAuth config."
-    ]
-  }, [
-    "A config entry cannot tell another machine that a server crashed or needs sign-in.",
-    "MCP status became session state. Every client sees starting, ready, needs sign-in, or failed.",
-    "The host owns the MCP connection. Clients do not open competing ones."
-  ], [SRC.changelog]),
-
-  S('automations', 'How the spec changed', 55, 'psu', {
-    "title": "Automations run without an editor open",
-    "labels": [
-      "The problem",
-      "What we changed",
-      "What it enables"
-    ],
-    "problem": "A scheduled task can’t wait for someone to open an editor.",
-    "spec": "The host owns schedules, runs, history, and recovery.",
-    "unlocked": "Work starts on schedule. You review the result later, from any client.",
-    "know": [
-      "Local schedules still need the host running and the machine awake. GitHub cloud automations are a separate path."
-    ]
-  }, [
-    "Scheduled work cannot wait for an editor to open.",
-    "The host owns schedules, runs, and history. You reconnect later to review the result.",
+    "War story: one cloud quick chat produced 702 and 355 sync updates in a single turn, because the host's /root scratch folder was mistaken for a workspace. The fix brought it to 5 and 10.",
     "\"The spec grew out of real product failures. Build on it, and you get those lessons for free.\"",
     "→ \"So how does this compare to other agent protocols?\""
-  ], [SRC.pr(331796), SRC.pr(341542), SRC.pr(342037)]),
+  ], [SRC.pr(327946), SRC.pr(340564)]),
 
   S('s5-intro', 'Comparisons', 30, 'arrows', {
     "title": "Which part are you connecting?",
@@ -792,5 +638,176 @@ window.SLIDES = [
     "If you build tools or UIs: write an AHP client. The spec and the inspector are on screen.",
     "If you build software factories for your team or company: treat sessions as infrastructure. Run agents near the code, route attention to the right person, and let people use whatever interface fits.",
     "\"Your editor is one way to meet your agent. It shouldn't decide where the work runs or which agent you use.\""
-  ], [SRC.ahp, SRC.inspector])
+  ], [SRC.ahp, SRC.inspector]),
+
+  S('appendix', 'Appendix', 0, 'statement', {
+    "title": "Appendix",
+    "lede": "Backup slides for questions and later versions of the talk."
+  }, [
+    "Stop at the close. These slides are for questions and future revisions."
+  ]),
+
+  S('mcp-next', 'Appendix', 45, 'list', {
+    "title": "The next MCP spec drops protocol sessions",
+    "items": [
+      {
+        "h": "No session handshake",
+        "p": "Every request carries its own version and capabilities."
+      },
+      {
+        "h": "Long-running work moves to Tasks",
+        "p": "An official extension handles work that outlasts one request."
+      },
+      {
+        "h": "Servers ask for input in the result",
+        "p": "They return input_required instead of calling the client back."
+      }
+    ],
+    "know": [
+      "Details: no initialize handshake and no Mcp-Session-Id; Tasks moved into an official extension; servers return input_required instead of calling back into the client."
+    ]
+  }, [
+    "People call it \"MCP 2.0\". The official name is the 2026-07-28 revision.",
+    "The headline: MCP removed sessions from the protocol. Servers scale like stateless web services. Long-running work moves into Tasks.",
+    "\"Tools got easier to scale. But the agent calling them is still stateful. Where does that state live?\""
+  ], [SRC.mcp]),
+
+  S('vscode-move', 'Appendix', 45, 'timeline', {
+    "title": "VS Code moved agents out of the extension host",
+    "items": [
+      {
+        "date": "Mar 6",
+        "tag": "State",
+        "text": "One shared session model"
+      },
+      {
+        "date": "Mar 16",
+        "tag": "Process",
+        "text": "Agent Host runs as its own process"
+      },
+      {
+        "date": "Mar 17",
+        "tag": "Remote",
+        "text": "Remote clients connect"
+      },
+      {
+        "date": "Aug 5",
+        "tag": "Sessions",
+        "text": "Copilot CLI sessions move to the host"
+      },
+      {
+        "date": "Aug 26",
+        "tag": "1.135",
+        "text": "Agent Host ships with the Copilot SDK",
+        "hot": true
+      }
+    ],
+    "footer": "Close the editor. The work keeps going.",
+    "know": [
+      "This is our implementation. AHP itself does not require a local process or Electron."
+    ]
+  }, [
+    "In VS Code, this meant moving agents out of the extension host, which lives and dies with a window.",
+    "Now the editor is just a client. VS Code 1.135 shipped the Agent Host with the Copilot SDK harness."
+  ], [SRC.pr(299839), SRC.pr(296627), SRC.pr(301140), SRC.pr(328512), SRC.release(135)]),
+
+  S('layers', 'Appendix', 45, 'compare', {
+    "title": "Shared runtime, shared protocol, different jobs",
+    "cols": [
+      "",
+      "Copilot SDK",
+      "Agent Host Protocol"
+    ],
+    "rows": [
+      [
+        "Job",
+        "Runs the agent loop",
+        "Connects clients to sessions"
+      ],
+      [
+        "Owns",
+        "Tools, context, model calls",
+        "The session state clients see"
+      ],
+      [
+        "Gives you",
+        "One harness for every Copilot product",
+        "Any agent, any interface"
+      ]
+    ]
+  }, [
+    "Two layers, two jobs: the SDK runs the agent well; AHP makes the session reachable.",
+    "AHP stays harness-agnostic. Claude and Codex adapters use the same contract without the Copilot runtime."
+  ], [SRC.ahp, SRC.harness]),
+
+  S('capabilities', 'Appendix', 60, 'section', {
+    "title": "Every client gets the whole session",
+    "lede": "See the work. Answer approvals. Review changes.",
+    "items": [
+      {
+        "h": "Conversations",
+        "p": "Turns, side chats, subagents"
+      },
+      {
+        "h": "Workspace",
+        "p": "Folders, setup, file changes"
+      },
+      {
+        "h": "Tools",
+        "p": "Calls, approvals, MCP status"
+      },
+      {
+        "h": "Live work",
+        "p": "Terminals and progress"
+      }
+    ]
+  }, [
+    "A transcript is not enough. A client needs what is running, what changed, and what needs a person.",
+    "AHP exposes each of these as a channel. Clients subscribe only to what they show.",
+    "\"That is why a client you write can show which session needs you, without knowing which agent runs it.\""
+  ], [SRC.ahp]),
+
+  S('mcp-state', 'Appendix', 60, 'list', {
+    "title": "Every client needs to see MCP server status",
+    "items": [
+      {
+        "h": "Starting or ready",
+        "p": "The host reports live status, not just config."
+      },
+      {
+        "h": "Needs sign-in or failed",
+        "p": "Any client can show what blocks the session."
+      },
+      {
+        "h": "A turn waits for startup",
+        "p": "The session shows the wait instead of looking stuck."
+      }
+    ],
+    "know": [
+      "Portable config has limits: interactive variables, env files, working directories, and OAuth config."
+    ]
+  }, [
+    "A config entry cannot tell another machine that a server crashed or needs sign-in.",
+    "MCP status became session state. Every client sees starting, ready, needs sign-in, or failed.",
+    "The host owns the MCP connection. Clients do not open competing ones."
+  ], [SRC.changelog]),
+
+  S('automations', 'Appendix', 55, 'psu', {
+    "title": "Automations run without an editor open",
+    "labels": [
+      "The problem",
+      "What we changed",
+      "What it enables"
+    ],
+    "problem": "A scheduled task can’t wait for someone to open an editor.",
+    "spec": "The host owns schedules, runs, history, and recovery.",
+    "unlocked": "Work starts on schedule. You review the result later, from any client.",
+    "know": [
+      "Local schedules still need the host running and the machine awake. GitHub cloud automations are a separate path."
+    ]
+  }, [
+    "Scheduled work cannot wait for an editor to open.",
+    "The host owns schedules, runs, and history. You reconnect later to review the result.",
+    "\"The spec grew out of real product failures. Build on it, and you get those lessons for free.\""
+  ], [SRC.pr(331796), SRC.pr(341542), SRC.pr(342037)])
 ];

@@ -469,6 +469,8 @@
       }).join('')}
       ${A(session(554, 150, 300, 124, 'Same session', 'Every client'), 0)}`), '', lede(s));
 
+  scenes.appendix = (s) => `<div class="l-appendix">${h2(s)}${lede(s)}</div>`;
+
   scenes.close = (s) => side(`${h2(s)}<ul class="cmds">${s.commands.map((cmd, i) =>
       `<li class="a" style="--d:${900 + i * 180}ms"><code>${cmd}</code></li>`).join('')}</ul>`,
     svg('832 700', 'The agent session now lives outside the chat window and connects to many clients.', `
@@ -493,12 +495,15 @@
   const minutes = (seconds) => `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
 
   if (notesRoot) {
-    const total = slides.reduce((sum, slide) => sum + slide.seconds, 0);
+    const main = slides.filter((slide) => slide.section !== 'Appendix');
+    const total = main.reduce((sum, slide) => sum + slide.seconds, 0);
+    const extra = slides.length - main.length - 1;
     document.getElementById('notes-summary').textContent =
-      `${slides.length} slides · ${minutes(total)} speaking estimate · live demos add 3–5 minutes`;
+      `${main.length} slides · ${minutes(total)} speaking estimate · live demos add 3–5 minutes` +
+      (extra > 0 ? ` · ${extra} appendix slides` : '');
     notesRoot.innerHTML = slides.map((slide, i) => `
       <article class="speaker-slide" id="${slide.id}">
-        <header><p>${String(i + 1).padStart(2, '0')} · ${slide.section} · ${minutes(slide.seconds)}</p>
+        <header><p>${slide.section === 'Appendix' ? (slide.id === 'appendix' ? 'Appendix' : `A${i - main.length}`) : String(i + 1).padStart(2, '0')} · ${slide.section}${slide.seconds ? ` · ${minutes(slide.seconds)}` : ''}</p>
           <h2><a href="index.html#${slide.id}">${slide.title}</a></h2></header>
         ${frame(slide)}
         <div class="speaker-copy">${slide.notes.map((note) => {

@@ -78,6 +78,9 @@ code { font-family: var(--mono); font-size: .9em; color: var(--mint); }
 .l-reveal .side-copy h2 { font-size: 96px; line-height: 1; letter-spacing: -.04em; }
 .l-reveal .lede { font-size: 40px; color: #9fd0ff; margin-top: 32px; }
 .l-close .side-copy h2 { font-size: 76px; line-height: 1.04; }
+.l-appendix { justify-content: center; }
+.l-appendix h2 { font-size: 96px; color: var(--dim); }
+.l-appendix .lede { font-size: 34px; }
 
 .caps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px; margin-top: 30px; }
 .caps h3 { font-size: 21px; font-weight: 650; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 10px; color: var(--dim); }

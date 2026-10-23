@@ -569,7 +569,7 @@ window.SLIDES = [
     "→ \"So where does AHP fit next to the other agent protocols?\""
   ], [SRC.pr(327946), SRC.pr(340564)]),
 
-  S('s5-intro', 'Comparisons', 75, 'arrows', {
+  S('s5-intro', 'Comparisons', 45, 'arrows', {
     "title": "Where AHP fits next to ACP and A2A",
     "rows": [
       {
@@ -593,16 +593,54 @@ window.SLIDES = [
       }
     ],
     "know": [
-      "This compares stable ACP v1. ACP v2 is a draft exploring multi-client observation. One ACP connection can manage several sessions; it is still one client.",
-      "Don't mention any vendor's private plans.",
-      "Detailed ACP vs AHP and A2A vs AHP tables are in the appendix for questions."
+      "Don't mention any vendor's private plans."
     ]
   }, [
-    "Compare what each protocol connects, not feature lists.",
-    "ACP is good at what it was built for: one agent in one editor. A second client needs more: joining live work, ordering actions from several clients, recovering after a disconnect. You can build that around ACP. AHP puts it in the contract.",
-    "A2A hands work to an independent agent system. You get tasks and artifacts back, not its internals. AHP is for watching and steering your own sessions.",
-    "\"They stack. And ACP agents don't have to pick a side.\"",
-    "→ Gateway."
+    "Compare what each protocol connects before comparing features.",
+    "ACP puts one agent in one editor. AHP lets many apps share a running session. A2A hands a task to another agent system.",
+    "\"They connect different things, so they stack.\" Start with the closest one.",
+    "→ \"ACP first.\""
+  ], [SRC.acp]),
+
+  S('acp', 'Comparisons', 60, 'compare', {
+    "title": "ACP vs AHP",
+    "cols": [
+      "",
+      "ACP",
+      "AHP"
+    ],
+    "rows": [
+      [
+        "Connection",
+        "One client ↔ one harness",
+        "Many clients ↔ one host"
+      ],
+      [
+        "A second client joins",
+        "Your app has to build it",
+        "It gets a snapshot of the live session"
+      ],
+      [
+        "Two clients act",
+        "The app coordinates them",
+        "The host orders and reconciles actions"
+      ],
+      [
+        "Connection drops",
+        "Load or resume the session",
+        "Replay missed actions, or start from a snapshot"
+      ]
+    ],
+    "know": [
+      "This compares stable ACP v1. ACP v2 is a draft exploring multi-client observation.",
+      "One ACP connection can manage several sessions; it is still one client.",
+      "Don't mention any vendor's private plans."
+    ]
+  }, [
+    "ACP is good at what it was built for: one agent embedded in one editor.",
+    "Walk the rows. A second client joining, two clients acting at once, and a dropped connection are where AHP adds a contract.",
+    "\"You can build all of that around ACP. AHP puts it in the spec.\"",
+    "→ \"And you don't have to choose between them.\""
   ], [SRC.acp]),
 
   S('gateway', 'Comparisons', 45, 'gateway', {
@@ -634,8 +672,47 @@ window.SLIDES = [
     "Brand new. The AHP docs started listing this community project on October 16.",
     "\"You don't have to replace an agent's ACP integration. A gateway can use ACP to run the agent and AHP to expose its sessions to multiple clients.\"",
     "It proves the point of the talk: the agent and the interface are independent choices.",
-    "→ \"Enough contract. Here is what it lets us build.\""
+    "→ \"One more neighbour: A2A.\""
   ], [SRC.gateway, SRC.gatewayDocs]),
+
+  S('a2a', 'Comparisons', 50, 'compare', {
+    "title": "A2A vs AHP",
+    "cols": [
+      "",
+      "A2A",
+      "AHP"
+    ],
+    "rows": [
+      [
+        "Connects",
+        "An agent to another agent system",
+        "Clients to sessions on a host"
+      ],
+      [
+        "Work",
+        "Tasks, messages, artifacts",
+        "Sessions, chats, approvals, changes"
+      ],
+      [
+        "You see",
+        "The Agent Card and task results",
+        "The session state a client needs"
+      ],
+      [
+        "Use it to",
+        "Hand work to another system",
+        "Watch and steer running work"
+      ]
+    ],
+    "know": [
+      "The AHP plus A2A combination is an architecture possibility, not a shipped integration."
+    ]
+  }, [
+    "A2A hands work to an independent agent system. You see its Agent Card and get back tasks and artifacts, not its internals.",
+    "AHP is for watching and steering your own running sessions.",
+    "\"They stack: an agent inside an AHP session can hand a task to an A2A agent.\"",
+    "→ \"Enough contract. Here is what it lets us build.\""
+  ]),
 
   S('s6-intro', 'Live demonstrations', 20, 'statement', {
     "title": "The next agent UI doesn't have to look like an editor",
@@ -672,84 +749,6 @@ window.SLIDES = [
     "lede": "Backup slides for questions and later versions of the talk."
   }, [
     "Stop at the close. These slides are for questions and future revisions."
-  ]),
-
-  S('acp', 'Appendix', 60, 'compare', {
-    "title": "ACP vs AHP",
-    "cols": [
-      "",
-      "ACP",
-      "AHP"
-    ],
-    "rows": [
-      [
-        "Connection",
-        "One client ↔ one harness",
-        "Many clients ↔ one host"
-      ],
-      [
-        "A second client joins",
-        "Your app has to build it",
-        "It gets a snapshot of the live session"
-      ],
-      [
-        "Two clients act",
-        "The app coordinates them",
-        "The host orders and reconciles actions"
-      ],
-      [
-        "Connection drops",
-        "Load or resume the session",
-        "Replay missed actions, or start from a snapshot"
-      ]
-    ],
-    "know": [
-      "This compares stable ACP v1. ACP v2 is a draft exploring multi-client observation.",
-      "One ACP connection can manage several sessions; it is still one client.",
-      "Do not mention any vendor's private plans."
-    ]
-  }, [
-    "ACP is good at what it was built for: embedding an agent in an editor.",
-    "AHP adds what a second client needs: joining live work, concurrent actions, recovery after a disconnect, shared approvals.",
-    "You can build those around ACP. AHP puts them in the contract."
-  ], [SRC.acp]),
-
-  S('a2a', 'Appendix', 50, 'compare', {
-    "title": "A2A vs AHP",
-    "cols": [
-      "",
-      "A2A",
-      "AHP"
-    ],
-    "rows": [
-      [
-        "Connects",
-        "An agent to another agent system",
-        "Clients to sessions on a host"
-      ],
-      [
-        "Work",
-        "Tasks, messages, artifacts",
-        "Sessions, chats, approvals, changes"
-      ],
-      [
-        "You see",
-        "The Agent Card and task results",
-        "The session state a client needs"
-      ],
-      [
-        "Use it to",
-        "Hand work to another system",
-        "Watch and steer running work"
-      ]
-    ],
-    "know": [
-      "The AHP plus A2A combination is an architecture possibility, not a shipped integration."
-    ]
-  }, [
-    "A2A delegates to an independent agent system. You get tasks and artifacts, not its internals.",
-    "AHP is for observing and steering your own sessions.",
-    "They stack: an agent in an AHP session can delegate to an A2A agent."
   ]),
 
   S('vscode-move', 'Appendix', 45, 'timeline', {

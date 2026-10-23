@@ -273,7 +273,7 @@
     },
 
     layers: (s) => stage(s, svg('1408 500', 'Clients connect through the Agent Host Protocol to a host; harnesses such as the Copilot SDK run each agent.', `
-        ${A(r(0, 10, 940, 90, 'n') + ['VS Code', 'Agents window', 'Your dashboard'].map((l, i) => box(20 + i * 310, 25, 280, 60, l, '', 'inner')).join(''), 100)}
+        ${A(r(0, 10, 940, 90, 'n') + ['VS Code', 'Agents window', 'Your client'].map((l, i) => box(20 + i * 310, 25, 280, 60, l, '', 'inner')).join(''), 100)}
         ${A(r(0, 130, 940, 60, 'n blue band') + t(470, 169, 'Agent Host Protocol', 'lbl bluet'), 300)}
         ${A(r(0, 220, 940, 100, 'n') + t(470, 262, 'Agent host', 'lbl') + t(470, 294, 'Shared session state', 'sub'), 500)}
         ${A(box(0, 350, 310, 110, 'Copilot SDK', 'Copilot harness', 'mint') + box(325, 350, 290, 110, 'Claude', 'Adapter') + box(630, 350, 310, 110, 'Codex', 'Adapter'), 700)}
@@ -442,8 +442,8 @@
   scenes.acp = compare;
   scenes.a2a = compare;
 
-  scenes['s6-intro'] = (s) => stage(s, svg('1408 430', 'One session shown in four clients: an Agents window, a canvas, a dashboard, and a game.', `
-      ${[[40, 20, 'Agents window'], [40, 240, 'Canvas'], [1048, 20, 'Dashboard'], [1048, 240, 'Game']].map(([x, y, label], i) => {
+  scenes['s6-intro'] = (s) => stage(s, svg('1408 430', 'One session shown in four clients: an Agents window, a canvas, a game, and a client you write.', `
+      ${[[40, 20, 'Agents window'], [40, 240, 'Canvas'], [1048, 20, 'Your client'], [1048, 240, 'Game']].map(([x, y, label], i) => {
         const inside = [
           [0, 1, 2].flatMap((col) => [0, 1].map((row) => r(x + 28 + col * 92, y + 66 + row * 52, 80, 40, row + col === 1 ? 'tile hot' : 'tile', 8))).join(''),
           c(x + 90, y + 110, 34, 'shape') + r(x + 150, y + 76, 70, 70, 'shape sq', 10) + p(`M${x + 250} ${y + 146}l34 -66l34 66z`, 'shape'),
@@ -460,7 +460,7 @@
     svg('832 700', 'The agent session now lives outside the chat window and connects to many clients.', `
       <g class="ghostwin">${win(20, 470, 240, 190, 'Chat')}</g>
       ${draw('M250 500C300 470 320 440 330 414', 'trail', 300, 700)}
-      ${[[30, 60, 'VS Code'], [310, 20, 'Agents window'], [590, 90, 'Dashboard'], [560, 520, 'Game']].map(([x, y, label], i) => {
+      ${[[30, 60, 'VS Code'], [310, 20, 'Agents window'], [590, 90, 'Your client'], [560, 520, 'Game']].map(([x, y, label], i) => {
         const d = `M416 352L${x + 110} ${y + 36}`;
         return draw(d, 'w', 500 + i * 140, 600) + `<path d="${d}" class="fl mint" style="--d:1200ms"/>` + pk(d, 'mint', 1300 + i * 400) +
           A(box(x, y, 220, 72, label), 700 + i * 140);
@@ -487,8 +487,12 @@
         <header><p>${String(i + 1).padStart(2, '0')} · ${slide.section} · ${minutes(slide.seconds)}</p>
           <h2><a href="index.html#${slide.id}">${slide.title}</a></h2></header>
         ${frame(slide)}
-        <div class="speaker-copy">${slide.notes.map((note) => `<p>${note}</p>`).join('')}
+        <div class="speaker-copy">${slide.notes.map((note) => {
+            const cls = note.startsWith('"') ? 'say' : note.startsWith('→') ? 'next' : '';
+            return `<p${cls ? ` class="${cls}"` : ''}>${note}</p>`;
+          }).join('')}
           ${slide.cue.length ? `<aside class="demo-cue"><h3>Live demo</h3><ul>${slide.cue.map((cue) => `<li>${cue}</li>`).join('')}</ul></aside>` : ''}
+          ${slide.know?.length ? `<aside class="know"><h3>Know</h3><ul>${slide.know.map((k) => `<li>${k}</li>`).join('')}</ul></aside>` : ''}
           ${slide.sources.length ? `<div class="sources"><h3>Sources</h3><ul>${slide.sources.map((item) =>
             `<li><a href="${item.href}" target="_blank" rel="noopener">${item.label}</a></li>`).join('')}</ul></div>` : ''}
         </div>

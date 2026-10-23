@@ -289,6 +289,11 @@ html:has(.notes-page) { scroll-snap-type: none; }
 .speaker-copy p + p { margin-top: 16px; }
 .speaker-copy h3 { font-size: 18px; margin-bottom: 12px; }
 .speaker-copy ul { padding-left: 24px; display: grid; gap: 10px; }
+.speaker-copy p.say { color: var(--text); font-weight: 600; border-left: 3px solid var(--mint); padding-left: 14px; }
+.speaker-copy p.next { color: var(--dim); font-style: italic; }
+.know { margin-top: 26px; padding: 18px 22px; border: 1px solid #2c3d51; border-radius: 12px; font-size: 16px; color: var(--dim); }
+.know h3 { color: var(--faint); text-transform: uppercase; letter-spacing: .06em; font-size: 13px; }
+.know ul { padding-left: 20px; }
 .demo-cue { background: #0f2440; padding: 24px; margin-top: 26px; border-radius: 12px; }
 .demo-cue h3 { color: #8cc6ff; }
 .sources { margin-top: 26px; font-size: 16px; }

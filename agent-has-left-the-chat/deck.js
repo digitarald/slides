@@ -533,11 +533,24 @@
   const heroOf = (el) => heroes.get(el.querySelector('canvas.hero3d'));
   // Print the settled frame, then resume whatever was animating.
   let resume = [];
+  // Chrome prints a canvas onto an opaque white backing, so swap in a transparent PNG for print.
   window.addEventListener('beforeprint', () => {
     resume = [...heroes.values()].filter((hero) => hero.running);
-    heroes.forEach((hero) => { hero.stop(); hero.still(2); });
+    heroes.forEach((hero, canvas) => {
+      hero.stop(); hero.still(2);
+      const img = document.createElement('img');
+      img.className = 'hero3d hero3d-print';
+      img.alt = canvas.getAttribute('aria-label') || '';
+      img.src = canvas.toDataURL('image/png');
+      canvas.after(img);
+      canvas.hidden = true;
+    });
   });
-  window.addEventListener('afterprint', () => { resume.forEach((hero) => hero.start()); resume = []; });
+  window.addEventListener('afterprint', () => {
+    document.querySelectorAll('img.hero3d-print').forEach((img) => img.remove());
+    heroes.forEach((_, canvas) => { canvas.hidden = false; });
+    resume.forEach((hero) => hero.start()); resume = [];
+  });
 
   const resizeObserver = new ResizeObserver((entries) => {
     for (const entry of entries) entry.target.style.setProperty('--s', entry.contentRect.width / 1600);

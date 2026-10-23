@@ -53,7 +53,7 @@
     `<div class="a" style="--d:${500 + i * 200}ms"><h3 class="k${i}">${labels[i]}</h3><p>${text}</p></div>`).join('')}</div>`;
   const miniList = (items) => `<ol class="mini">${items.map((item, i) =>
     `<li class="a" style="--d:${200 + i * 180}ms"><h3>${item.h}</h3><p>${item.p}</p></li>`).join('')}</ol>`;
-  const psuCaps = (s) => caps(s.labels || ['The problem', 'The shared contract', 'What it enables'], [s.problem, s.spec, s.unlocked]);
+  const psuCaps = (s) => caps(s.labels || ['The problem', 'The shared contract', 'What you get'], [s.problem, s.spec, s.unlocked]);
   const Z = [0, 485, 971];
 
   const tangle = (x1, ys1, x2, ys2, delay = 0, cls = 'tg') =>

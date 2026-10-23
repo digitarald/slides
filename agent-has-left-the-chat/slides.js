@@ -20,19 +20,19 @@ const SRC = {
 window.SLIDES = [
   S('title', 'Opening', 30, 'title', {
     "title": "The Agent Has Left the Chat",
-    "subtitle": "Run agents anywhere. Connect from anywhere.",
+    "subtitle": "How any app can join a running agent session",
     "by": "Harald Kirschner · VS Code, GitHub Copilot",
     "know": [
       "This is about choice of interface and environment. It is not an argument against chat or against running agents locally."
     ]
   }, [
     "\"I work on agents in VS Code. This talk is about where an agent session lives, and who gets to connect to it.\"",
-    "Let the animation run. One agent breaks out of its chat and becomes a session that many clients can join. That is the whole talk in 20 seconds."
+    "Let the animation run. One agent breaks out of its chat and becomes a session that many clients can join. That loop is the whole talk."
   ]),
 
   S('problem', 'Opening', 45, 'problem', {
-    "title": "Your agent keeps working. You can’t reach it.",
-    "lede": "Each session lives inside the app that started it.",
+    "title": "Your agent is waiting on you, and you're on another machine",
+    "lede": "Your session lives in the app that started it.",
     "app": "The app that started it",
     "clients": [
       "Your phone",
@@ -45,21 +45,21 @@ window.SLIDES = [
   }, [
     "Agents now run for hours. They edit files, run terminals, and stop to ask for approval.",
     "Ask: \"Who has had an agent wait on an approval while you were away from the machine that started it?\"",
-    "That session lives in one app: an editor window, a CLI, a cloud job. Your phone, a browser, or your other machine cannot open it.",
+    "That session lives in one app, whether that's an editor window, a CLI, or a cloud job. Your phone, a browser, or your other machine can't open it.",
     "\"By the end: start an agent wherever you are, let it work where your code and tools live, and pick up the work from whatever interface you need.\"",
-    "→ \"We have solved this shape of problem before.\""
+    "→ \"We've solved this kind of problem four times before.\""
   ]),
 
   S('s1-intro', 'Four standards', 25, 'section', {
-    "title": "Four times, a shared contract ended the rebuild",
-    "lede": "Every app rebuilt the same integration. Then one standard made it reusable.",
+    "title": "We've fixed this kind of problem four times already",
+    "lede": "Each time, every app rebuilt the same integration until one standard replaced it.",
     "items": [
       {
         "h": "LSP",
         "p": "Language support"
       },
       {
-        "h": "AGENTS.md + Skills",
+        "h": "AGENTS.md and Skills",
         "p": "Team know-how"
       },
       {
@@ -75,25 +75,24 @@ window.SLIDES = [
       "Dates if asked: LSP 2016, MCP November 2024, AGENTS.md and Agent Skills as open formats in 2025."
     ]
   }, [
-    "Same pattern four times: every app rebuilt the same integration, until a shared contract made it reusable.",
-    "For each one: what problem developers had, and what the contract made reusable.",
+    "Four standards, one pattern. For each, say what developers kept rebuilding and what the standard made reusable.",
     "→ Start with the one everyone knows."
   ]),
 
   S('lsp', 'Four standards', 45, 'psu', {
-    "title": "LSP: every editor gets every language",
+    "title": "LSP let one language server work in every editor",
     "math": "M × N → M + N",
     "problem": "Each editor built completion, navigation, and diagnostics for each language.",
     "spec": "Editors and language servers speak one protocol.",
     "unlocked": "A language team ships one server. Every editor uses it."
   }, [
-    "Problem: you want good language support in the editor you use. Every editor rebuilt it for every language.",
-    "Fix: separate language smarts from the UI. One server, many editors.",
-    "\"Remember this shape: the capability lives in one place, and any UI can use it. We are going to apply it to agent sessions.\""
+    "You want good language support in the editor you use. Before LSP, every editor rebuilt it for every language.",
+    "LSP separated the language smarts from the UI. One server, many editors.",
+    "\"Remember this shape: the capability lives in one place, and any UI can use it. We're going to apply it to agent sessions.\""
   ]),
 
   S('know-how', 'Four standards', 50, 'knowhow', {
-    "title": "AGENTS.md and Skills: write team know-how once",
+    "title": "AGENTS.md and Skills move your team's know-how between agents",
     "files": [
       "CLAUDE.md",
       ".cursorrules",
@@ -124,49 +123,50 @@ window.SLIDES = [
       "Codex",
       "Other agents"
     ],
-    "footer": "Write it once. Every compatible agent picks it up.",
+    "footer": "Every compatible agent reads the same files.",
     "know": [
       "AGENTS.md is supported by Copilot, Codex, Cursor, Jules, Gemini CLI, Zed, and others (agents.md). Claude Code reads CLAUDE.md, so the slide does not name it.",
       "Agent Skills are supported by Copilot, Claude Code, Codex, and others."
     ]
   }, [
-    "Problem: how your team works lived in each agent's own file. Switch agents, rewrite it.",
-    "Two open formats fixed it. AGENTS.md holds the guidance an agent reads every time: how to build, test, and follow your conventions.",
-    "Skills hold whole workflows. Only the description loads up front; the instructions, scripts, and references load when the task needs them.",
+    "How your team works lived in each agent's own file. Switch agents, and you rewrite it.",
+    "Two open formats fixed that. AGENTS.md holds what an agent reads every time, like how to build, test, and follow your conventions.",
+    "Skills hold whole workflows. Only the description loads up front. The instructions, scripts, and references load when the task needs them.",
     "\"Workflows became transferable between agents.\""
   ]),
 
   S('mcp', 'Four standards', 50, 'psu', {
-    "title": "MCP: write a tool integration once",
+    "title": "MCP lets you build a Slack integration once, sign-in included",
     "math": "M × N → M + N",
     "problem": "Every AI app built its own Slack, database, and browser integration, including sign-in.",
     "spec": "A server exposes tools, resources, and prompts over one protocol, with standard OAuth.",
-    "unlocked": "Build the Slack server once. Every MCP client can use it.",
+    "unlocked": "You build the Slack server once, and every MCP client can use it.",
     "know": [
       "MCP authorization uses OAuth 2.1 for remote servers. Each client still signs in on its own; the server is built once.",
       "Backup slide on the 2026-07-28 MCP revision is in the appendix."
     ]
   }, [
-    "Same M × N story as LSP, one layer over: agents and the tools and data they act on.",
-    "The hard part of a real integration is often sign-in. MCP standardizes that too.",
-    "Build the Slack server, with its sign-in, once. Any MCP client can call it.",
-    "And MCP keeps moving. The 2026-07-28 revision drops protocol sessions: servers scale like stateless web services, and long-running work moves to Tasks.",
-    "→ \"Tools are portable. Next: whole workflows.\""
+    "Same M × N story as LSP, one layer over. This time it's agents and the tools and data they act on.",
+    "Sign-in is often the hard part of a real integration. MCP standardizes that too.",
+    "MCP keeps moving. The 2026-07-28 revision drops protocol sessions, so servers scale like stateless web services. Long-running work moves to Tasks.",
+    "\"Tools got easier to scale. The agent calling them still holds the state.\" Hold that thought.",
+    "→ \"Tools are portable. Next, whole workflows.\""
   ], [SRC.mcp]),
 
   S('plugins', 'Four standards', 50, 'psu', {
-    "title": "Agent Plugins bundle a whole workflow",
+    "title": "Agent Plugins install a whole workflow in one step",
     "problem": "You set up skills, hooks, MCP servers, and custom agents one by one.",
     "spec": "One plugin installs them together.",
-    "unlocked": "A review agent, the hook that enforces it, and its tools, in one install.",
+    "unlocked": "You get a review agent, the hook that enforces it, and its tools in one install.",
     "limit": "But you install it in one window, on one machine."
   }, [
-    "Base problem: setup. Bigger point: useful workflows are combinations, a skill, an agent, a hook, an MCP server, that do what no single piece does alone.",
-    "The turn: the package is portable, but the installed setup lives in one window, on one machine."
+    "Setup is the obvious problem. The bigger point is that useful workflows are combinations. A skill, an agent, a hook, and an MCP server together do what none of them does alone.",
+    "Then the catch. You can share the package, but once installed it lives in one window on one machine.",
+    "→ \"Step back and look at what we made portable.\""
   ]),
 
   S('boundary', 'Four standards', 40, 'split', {
-    "title": "Capabilities travel. The running session doesn’t.",
+    "title": "You can share your setup, but not a running session",
     "left": {
       "h": "You can share",
       "items": [
@@ -184,27 +184,27 @@ window.SLIDES = [
       ]
     }
   }, [
-    "\"Capabilities travel. The running session doesn't.\"",
-    "Back to the problem from the start: no other app or machine can join the work.",
-    "Editor, CLI, cloud agent: same wall.",
+    "\"You can share your setup, but not a running session.\"",
+    "Pay off the MCP thought. Tools went stateless, so the state lives with the agent, and today that means inside one app.",
+    "That's the problem from the start. No other app or machine can join the work. Editor, CLI, or cloud agent, it's the same wall.",
     "→ \"So we separated where the session runs from where you work with it.\""
   ]),
 
   S('s2-intro', 'Agent Host Protocol', 45, 'section', {
     "title": "Agent Host Protocol",
-    "lede": "Run agents anywhere. Connect from anywhere.",
+    "lede": "An open protocol that lets any app connect to agent sessions running on a host.",
     "items": [
       {
         "h": "Host",
-        "p": "Holds the running sessions"
+        "p": "Runs your agent sessions"
       },
       {
         "h": "Harness",
-        "p": "Does the agent’s work"
+        "p": "The agent itself, like Copilot or Claude"
       },
       {
         "h": "Clients",
-        "p": "Show and steer the work"
+        "p": "The apps you use to watch and steer"
       }
     ],
     "clients": [
@@ -215,9 +215,9 @@ window.SLIDES = [
     ]
   }, [
     "AHP is an open protocol between a host that runs agent sessions and the clients that show and steer them.",
-    "\"The innovation is not a new process. It is that where the agent runs and where you control it become independent.\"",
-    "Clients include the editor, the Agents window, and a plain browser at vscode.dev/agents.",
-    "The host can be your laptop, a dev box, a container, or the cloud."
+    "\"Where the agent runs and where you control it are now separate choices.\" That matters more than any new process.",
+    "Clients include the editor, the Agents window, and a browser at vscode.dev/agents. The host can be your laptop, a dev box, a container, or the cloud.",
+    "→ \"That gives you three choices.\""
   ], [SRC.ahp]),
 
   S('choices', 'Agent Host Protocol', 50, 'columns', {
@@ -256,47 +256,13 @@ window.SLIDES = [
       "Harness choice stays conceptual. Remote continuity is the live proof."
     ]
   }, [
-    "Three separate decisions: which agent, which machine has your code and tools, which interface.",
-    "Example: a Claude agent in a Dev Container on my desktop, driven from VS Code on my laptop.",
-    "Adapters map each agent into one session model, so a client does not have to implement every harness."
-  ]),
-
-  S('how', 'Agent Host Protocol', 60, 'host', {
-    "title": "The host runs the sessions. Any client can join.",
-    "harnesses": [
-      "Copilot SDK",
-      "Claude",
-      "Codex"
-    ],
-    "state": [
-      "Conversations",
-      "Workspace and tools",
-      "Approvals",
-      "Terminals and changes"
-    ],
-    "clients": [
-      "VS Code",
-      "Agents window",
-      "Browser",
-      "Your client"
-    ],
-    "footer": "The host keeps one copy of the truth. Every client stays in sync.",
-    "know": [
-      "VS Code 1.135 shipped the Agent Host with the Copilot SDK harness. AHP itself does not require a local process or Electron. Timeline slide is in the appendix."
-    ]
-  }, [
-    "The host owns session state. The harness owns the agent loop. Clients subscribe and send actions.",
-    "A new client, like a browser on another device, joins the existing work. It does not start another agent or copy the session.",
-    "In VS Code, this meant moving agents out of the extension host, which lives and dies with a window. Say it during the demo: \"Close the editor. The work keeps going.\"",
-    "→ \"Let me show you.\""
-  ], [SRC.ahp, SRC.release(135)], [
-    'Live continuity, about 2 minutes: start a session on the selected host, close the editor client, then join the same session from the Dev Box or second device through the prepared dev tunnel.',
-    'Resolve a pending approval from the second client. Reopen the first client and show that it agrees.',
-    'Keep the host running. Closing a client is not shutting down the machine that executes the agent.'
+    "Point at the example. A Claude agent in a Dev Container on my desktop, used from VS Code on my laptop.",
+    "Adapters map each agent into one session model, so a client doesn't have to support every harness.",
+    "→ \"Start with the harness.\""
   ]),
 
   S('sdk', 'Agent Host Protocol', 55, 'radial', {
-    "title": "Copilot SDK: one harness behind every Copilot surface",
+    "title": "Every Copilot product runs on the same agent harness",
     "surfaces": [
       "Copilot CLI",
       "Copilot app",
@@ -304,17 +270,16 @@ window.SLIDES = [
       "VS Code",
       "Your app"
     ],
-    "caption": "Improve the harness once, and every surface gets better."
+    "caption": "When we improve the harness, the CLI, the app, code review, and VS Code all get it."
   }, [
-    "The VS Code host runs Copilot through the Copilot SDK, the same harness as the CLI.",
-    "The harness decides which files to read, which tools to call, what context to keep, and how to recover. Most of agent quality lives there.",
-    "Copilot CLI, the Copilot app, code review, and VS Code share it. Improve it once, every surface benefits.",
-    "\"The SDK runs the agent. AHP connects the clients.\" Two layers, two jobs, and AHP stays harness-agnostic: Claude and Codex adapters use the same contract.",
-    "→ \"Sharing only helps if it is good. Same model, different harness:\""
+    "For Copilot, the harness is the Copilot SDK. VS Code, the CLI, the Copilot app, and code review all run it.",
+    "The harness decides which files to read, which tools to call, what context to keep, and how to recover. Most of an agent's quality lives there.",
+    "\"The SDK runs the agent. AHP connects the clients.\" AHP stays harness-agnostic, so Claude and Codex adapters use the same contract.",
+    "→ \"Sharing a harness only helps if it's good. Same model, different harness:\""
   ], [SRC.harness]),
 
   S('bench', 'Agent Host Protocol', 60, 'benchmark', {
-    "title": "Same model, different harness: Copilot CLI keeps pace",
+    "title": "Copilot CLI keeps up with Claude Code and Codex CLI on their own models",
     "src": "assets/resolution-rate-vs-cost-variance-noarrow.png",
     "alt": "TerminalBench 2 mean completion rate versus cost for Copilot CLI, Codex CLI, and Claude Code, with run-to-run variance.",
     "comparisons": [
@@ -343,32 +308,66 @@ window.SLIDES = [
         ]
       }
     ],
-    "caption": "TerminalBench 2 · rounded from GitHub’s chart · 5+ runs each · ellipses show run-to-run spread",
+    "caption": "TerminalBench 2 · rounded from GitHub's chart · 5+ runs each · ellipses show run-to-run spread",
     "know": [
       "Numbers are rounded from the published chart. Ellipses overlap and runs vary, so do not claim a statistical win.",
       "TerminalBench 2, at least five runs per pairing, from the GitHub blog post of June 25."
     ]
   }, [
-    "How to read it: up means more tasks solved, left means cheaper.",
+    "Up means more tasks solved. Left means cheaper.",
     "\"On the vendors' own models, a shared multi-model harness stays competitive.\"",
-    "Point at the numbers: GPT-5.5, about 74% vs 73% and cheaper. Opus 4.7, about 75% vs 73%, a few cents more per task.",
-    "→ \"So what does a client actually get from AHP?\""
+    "Point at the numbers. GPT-5.5 is about 74% vs 73%, and cheaper. Opus 4.7 is about 75% vs 73%, at a few cents more per task.",
+    "→ \"Whichever harness you pick, the host runs the session. Here's how.\""
   ], [SRC.harness]),
 
+  S('how', 'Agent Host Protocol', 60, 'host', {
+    "title": "Any app can join a session running on the host",
+    "harnesses": [
+      "Copilot SDK",
+      "Claude",
+      "Codex"
+    ],
+    "state": [
+      "Conversations",
+      "Workspace and tools",
+      "Approvals",
+      "Terminals and changes"
+    ],
+    "clients": [
+      "VS Code",
+      "Agents window",
+      "Browser",
+      "Your client"
+    ],
+    "footer": "Every app sees the same state, because the host holds it.",
+    "know": [
+      "VS Code 1.135 shipped the Agent Host with the Copilot SDK harness. AHP itself does not require a local process or Electron. Timeline slide is in the appendix."
+    ]
+  }, [
+    "The host owns the session state. The harness runs the agent loop. Clients subscribe and send actions.",
+    "A new client, like a browser on another device, joins the existing work. It doesn't start another agent or copy the session.",
+    "In VS Code, this meant moving agents out of the extension host, which lives and dies with a window. During the demo, say \"Close the editor. The work keeps going.\"",
+    "→ \"Let me show you.\""
+  ], [SRC.ahp, SRC.release(135)], [
+    'Live continuity, about 2 minutes: start a session on the selected host, close the editor client, then join the same session from the Dev Box or second device through the prepared dev tunnel.',
+    'Resolve a pending approval from the second client. Reopen the first client and show that it agrees.',
+    'Keep the host running. Closing a client is not shutting down the machine that executes the agent.'
+  ]),
+
   S('shared-control', 'Shared sessions', 100, 'list', {
-    "title": "Join midway. Act from either client. Reconnect.",
+    "title": "Pick up a running session from any device, even after you drop off",
     "items": [
       {
         "h": "Join a session already running",
-        "p": "The new client gets a snapshot, then live updates."
+        "p": "You get a snapshot, then live updates."
       },
       {
         "h": "Answer from whatever device is handy",
-        "p": "The host orders every action and rejects an approval someone already answered."
+        "p": "The host puts every action in order, so nobody answers an approval twice."
       },
       {
         "h": "Pick up after a dropped connection",
-        "p": "The host replays what you missed, or sends a fresh snapshot."
+        "p": "You get what you missed, or a fresh snapshot."
       }
     ],
     "know": [
@@ -376,11 +375,11 @@ window.SLIDES = [
       "Do not promise transparent failover or exactly-once effects across host restarts."
     ]
   }, [
-    "A transcript is not enough. A client needs what is running, what changed, and what needs a person. AHP exposes each of these as a channel.",
-    "These three are what made the demo work.",
-    "Join: a snapshot, then ordered actions.",
-    "Act: clients apply actions locally; the host orders them and rejects stale ones. An approval cannot be answered twice.",
-    "Reconnect: replay from the last sequence number, or a fresh snapshot.",
+    "That demo worked because of three things.",
+    "A transcript isn't enough. Clients also see what's running, what changed, and what needs a person, each as its own channel.",
+    "Join. A new client gets a snapshot, then ordered actions.",
+    "Act. Clients apply actions locally, and the host orders them and rejects stale ones. An approval can't be answered twice.",
+    "Reconnect. The host replays from the client's last sequence number, or sends a fresh snapshot.",
     "→ \"None of this was designed up front.\""
   ], [SRC.ahp, SRC.inspector], [
     'Inspector, 20–30 seconds within this explanation: open a clean captured log in ahp-inspector. Show one approval action and "State at this point". Connect it to what both clients displayed.',
@@ -423,8 +422,8 @@ window.SLIDES = [
       "Backup stories in the appendix: MCP server status (0.3, 1.0) and Automations (0.9)."
     ]
   }, [
-    "\"Every break in the spec came from something VS Code could not represent.\"",
-    "Two stories: one session with many conversations, and your setup on a remote host."
+    "\"Every change came from a problem VS Code hit.\"",
+    "Tell two stories: one session with many conversations, and your setup on a remote host."
   ], [SRC.changelog]),
 
   S('split', 'How the spec changed', 60, 'split', {
@@ -448,8 +447,8 @@ window.SLIDES = [
       "A single-chat harness still exposes one default chat. Harnesses do not have to delegate the same way."
     ]
   }, [
-    "Problem: subagents. One transcript becomes unreadable; separate sessions lose shared context.",
-    "Version 0.4 split chats out of sessions. That enabled side chats, forking, and moving chats."
+    "Subagents broke the model. One transcript becomes unreadable, and separate sessions lose shared context.",
+    "Version 0.4 split chats out of sessions. That gave us side chats, forking, and moving a chat between sessions."
   ], [SRC.multiChat, SRC.changelog]),
 
   S('customizations', 'How the spec changed', 65, 'psu', {
@@ -457,18 +456,17 @@ window.SLIDES = [
     "labels": [
       "The problem",
       "What we changed",
-      "What it enables"
+      "What you get"
     ],
     "problem": "Your skills and agents live on your laptop. The session runs somewhere else.",
-    "spec": "Clients send their setup to the host as content-hashed bundles.",
-    "unlocked": "Your setup works remotely, and workspaces don’t overwrite each other.",
+    "spec": "VS Code sends your setup to the host as content-hashed bundles.",
+    "unlocked": "Your setup works remotely, and workspaces don't overwrite each other.",
     "know": [
       "Bundles are content-hashed. Workspace-scoped settings stay isolated so windows do not overwrite each other. Hooks keep harness-specific rules."
     ]
   }, [
-    "Problem: your skills and agents live on your laptop. The session runs somewhere else.",
     "Copying files was the easy part. Agreeing on identity and scope was the hard part.",
-    "War story: one cloud quick chat produced 702 and 355 sync updates in a single turn, because the host's /root scratch folder was mistaken for a workspace. The fix brought it to 5 and 10.",
+    "War story. One cloud quick chat produced 702 and 355 sync updates in a single turn. A publisher had mistaken the host's /root scratch folder for a workspace. The fix brought it to 5 and 10.",
     "\"The spec grew out of real product failures. Build on it, and you get those lessons for free.\"",
     "→ \"So how does this compare to other agent protocols?\""
   ], [SRC.pr(327946), SRC.pr(340564)]),
@@ -513,9 +511,9 @@ window.SLIDES = [
         "Many clients ↔ one host"
       ],
       [
-        "A client joins",
-        "The app builds shared access",
-        "Gets a snapshot of the live session"
+        "A second client joins",
+        "Your app has to build it",
+        "It gets a snapshot of the live session"
       ],
       [
         "Two clients act",
@@ -542,7 +540,7 @@ window.SLIDES = [
 
   S('gateway', 'Comparisons', 45, 'gateway', {
     "title": "ACP agents can join an AHP workbench",
-    "lede": "Just landed: a community gateway, now in the AHP implementation guide.",
+    "lede": "New in October: a community gateway, now listed in the AHP docs.",
     "chain": [
       "Clients",
       "AHP",
@@ -566,7 +564,7 @@ window.SLIDES = [
       "#530 is documentation, not a protocol change. I read the docs but have not run the gateway, so it is not a demo."
     ]
   }, [
-    "Just landed: a community-built gateway, listed in the AHP docs on October 16.",
+    "Brand new. The AHP docs started listing this community project on October 16.",
     "\"You don't have to replace an agent's ACP integration. A gateway can use ACP to run the agent and AHP to expose its sessions to multiple clients.\"",
     "It proves the point of the talk: the agent and the interface are independent choices."
   ], [SRC.gateway, SRC.gatewayDocs]),
@@ -611,8 +609,8 @@ window.SLIDES = [
   ]),
 
   S('s6-intro', 'Live demonstrations', 20, 'statement', {
-    "title": "Your next client doesn’t have to look like an editor.",
-    "lede": "The Agents window. A browser. A canvas. A game. Yours next."
+    "title": "The next agent UI doesn't have to look like an editor",
+    "lede": "Up next: the Agents window, a browser, a canvas, and a game."
   }, [
     "Same session, different interfaces.",
     "The Agents window, the browser, and the game are AHP clients. A canvas is UI inside a client."
@@ -623,7 +621,7 @@ window.SLIDES = [
   ]),
 
   S('close', 'Close', 45, 'statement', {
-    "title": "Run agents anywhere. Connect from anywhere.",
+    "title": "Your agent session doesn't belong to one app anymore",
     "commands": [
       "vscode.dev/agents",
       "microsoft/agent-host-protocol",
@@ -633,10 +631,10 @@ window.SLIDES = [
       "To find a local host for your own client, run code-insiders agent endpoints. It prints connection credentials, so never show its output."
     ]
   }, [
-    "Callback: LSP separated language smarts from the editor. AGENTS.md, Skills, MCP, and plugins made capabilities reusable. AHP does the same for the running session.",
-    "If you use agents: try it today in the VS Code Agents window, or at vscode.dev/agents.",
-    "If you build tools or UIs: write an AHP client. The spec and the inspector are on screen.",
-    "If you build software factories for your team or company: treat sessions as infrastructure. Run agents near the code, route attention to the right person, and let people use whatever interface fits.",
+    "LSP separated language smarts from the editor. AGENTS.md, Skills, MCP, and plugins made capabilities reusable. AHP does the same for the running session.",
+    "If you use agents, try it today in the VS Code Agents window or at vscode.dev/agents.",
+    "If you build tools or UIs, write an AHP client. The spec and the inspector are on screen.",
+    "If you build software factories for your team or company, treat sessions as shared infrastructure. Run agents near the code, send approvals to the right person, and let people use whatever interface fits.",
     "\"Your editor is one way to meet your agent. It shouldn't decide where the work runs or which agent you use.\""
   ], [SRC.ahp, SRC.inspector]),
 
@@ -772,7 +770,7 @@ window.SLIDES = [
     "items": [
       {
         "h": "Starting or ready",
-        "p": "The host reports live status, not just config."
+        "p": "The host reports live status, not only the config."
       },
       {
         "h": "Needs sign-in or failed",
@@ -797,9 +795,9 @@ window.SLIDES = [
     "labels": [
       "The problem",
       "What we changed",
-      "What it enables"
+      "What you get"
     ],
-    "problem": "A scheduled task can’t wait for someone to open an editor.",
+    "problem": "A scheduled task can't wait for someone to open an editor.",
     "spec": "The host owns schedules, runs, history, and recovery.",
     "unlocked": "Work starts on schedule. You review the result later, from any client.",
     "know": [

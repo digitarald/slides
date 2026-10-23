@@ -229,7 +229,10 @@ g.ghost { opacity: .5; }
 .st-blue { fill: var(--blue-deep); stroke: var(--blue); } .st-mint { fill: var(--mint-deep); stroke: var(--mint); }
 .st-amber { fill: #2a2312; stroke: var(--amber); } .st-red { fill: #2c1514; stroke: var(--red); }
 .st { opacity: 0; } .st.on { opacity: 1; }
-.tile { fill: #18222f; } .tile.hot { fill: #134540; stroke: var(--mint); }
+.tile { fill: #18222f; }
+.urlbar { fill: #0b121b; stroke: #2f4a68; }
+.wall { fill: var(--amber); opacity: .85; }
+.nd.bluefill { fill: var(--blue); stroke: none; } .tile.hot { fill: #134540; stroke: var(--mint); }
 .shape { fill: none; stroke: var(--blue); stroke-width: 2.5; } .shape.sq { stroke: var(--mint); }
 .bar { fill: #24405e; } .bar.hot { fill: var(--mint); }
 .iso { fill: #15202d; stroke: #36506b; stroke-width: 1.2; }
@@ -289,7 +292,7 @@ html:has(.notes-page) { scroll-snap-type: none; }
 .speaker-copy p + p { margin-top: 16px; }
 .speaker-copy h3 { font-size: 18px; margin-bottom: 12px; }
 .speaker-copy ul { padding-left: 24px; display: grid; gap: 10px; }
-.speaker-copy p.say { color: var(--text); font-weight: 600; border-left: 3px solid var(--mint); padding-left: 14px; }
+.speaker-copy p.say { color: var(--mint); font-weight: 600; }
 .speaker-copy p.next { color: var(--dim); font-style: italic; }
 .know { margin-top: 26px; padding: 18px 22px; border: 1px solid #2c3d51; border-radius: 12px; font-size: 16px; color: var(--dim); }
 .know h3 { color: var(--faint); text-transform: uppercase; letter-spacing: .06em; font-size: 13px; }

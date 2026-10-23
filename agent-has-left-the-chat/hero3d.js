@@ -47,7 +47,7 @@
     { name: 'VS Code', kind: 'code', y: 0 },
     { name: 'Agents window', kind: 'grid', y: 0 },
     { name: 'Phone', kind: 'phone', y: 0 },
-    { name: 'Dashboard', kind: 'bars', y: 0 },
+    { name: 'Browser', kind: 'browser', y: 0 },
     { name: 'Game', kind: 'game', y: 0 }
   ];
   const SESSIONS = ['Copilot', 'Claude', 'Codex'];
@@ -353,10 +353,14 @@
       ctx.fillStyle = rgba(MINT, 0.9); rrect(ctx, -10, -10, 20, 8, 4); ctx.fill();
       ctx.fillStyle = '#28354a'; rrect(ctx, -10, 4, 20, 8, 4); ctx.fill();
     },
-    bars: (ctx) => {
-      [24, 40, 30, 52, 44].forEach((h, i) => {
-        ctx.fillStyle = i === 3 ? rgba(MINT, 0.9) : '#2a4766';
-        rrect(ctx, -58 + i * 24, 38 - h, 16, h, 3); ctx.fill();
+    browser: (ctx) => {
+      rrect(ctx, -66, -24, 132, 16, 8); ctx.fillStyle = '#0b121b'; ctx.fill();
+      ctx.strokeStyle = '#2f4a68'; ctx.lineWidth = 1; ctx.stroke();
+      ctx.font = `500 9px ${SANS}`; ctx.textAlign = 'left'; ctx.fillStyle = '#8fb3d9';
+      ctx.fillText('vscode.dev/agents', -58, -13);
+      [0, 1, 2].forEach((i) => {
+        ctx.fillStyle = i === 1 ? rgba(MINT, 0.85) : '#1e2a3a';
+        rrect(ctx, -62 + i * 43, 2, 37, 30, 5); ctx.fill();
       });
     },
     game: (ctx, t) => {

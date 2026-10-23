@@ -62,19 +62,27 @@
   /* ------------------------------------------------------ Scenes */
   const scenes = {
     title: (s) => `<div class="l-title">
-        <canvas class="hero3d" role="img" aria-label="A single agent session breaks out of a chat window and joins other sessions on an agent host. Clients, including the chat, connect to the host from all around."></canvas>
+        <canvas class="hero3d" role="img" aria-label="A single agent session breaks out of a chat window and joins other sessions on an agent host. Clients, including a browser and the chat, connect to the host from all around."></canvas>
         <div class="title-copy"><h1>${s.title}</h1><p class="subtitle">${s.subtitle}</p><p class="by">${s.by}</p></div>
       </div>`,
 
-    hook: (s) => side(`${h2(s)}${lede(s)}`,
-      svg('832 700', 'Skills, MCP, and plugins move out of the app. The running session stays inside it.', `
-        ${A(t(20, 165, 'Portable', 'hd mintt', 'start'), 900)}
-        ${['Skills', 'MCP', 'Plugins'].map((label, i) =>
-          M(box(20, 200 + i * 110, 150, 64, label, '', 'mint'), 500 + i * 160, 330, 0)).join('')}
-        ${win(250, 160, 520, 430, 'The app that started it', 'ownframe')}
-        ${session(330, 330, 360, 124, 'Running session', 'Owned by this app')}
-        ${A(lock(670, 312), 1300)}
-        ${A(t(510, 640, 'Still owned here', 'hd ambert'), 1400)}`)),
+    problem: (s) => {
+      const ys = [30, 180, 330];
+      return stage(s, svg('1408 470', 'A running session waits for approval inside the app that started it. Your phone, a browser, and another machine cannot reach it.', `
+        ${win(0, 20, 560, 430, s.app, 'ownframe')}
+        ${session(60, 120, 440, 130, 'Agent session', 'Ran for 2 hours, now waiting')}
+        <g class="ask">${A(r(60, 290, 260, 64, 'appr', 32) + t(190, 331, 'Approve change?', 'lbl ambert'), 900)}</g>
+        ${A(t(80, 410, 'Waiting for you', 'sub ambert', 'start'), 1100)}
+        ${s.clients.map((label, i) => {
+          const y = ys[i];
+          const d = `M1060 ${y + 45}C900 ${y + 45} 860 ${235} 700 235`;
+          return A(box(1060, y, 348, 90, label), 1300 + i * 200) +
+            draw(`M1060 ${y + 45}C900 ${y + 45} 860 235 720 235`, 'w', 1500 + i * 200, 700) +
+            pk(`M1060 ${y + 45}C930 ${y + 45} 880 ${y > 200 ? 290 : 180} 770 ${y > 200 ? 270 : 200}`, 'amber', 2100 + i * 500, 1900);
+        }).join('')}
+        ${A(r(640, 160, 8, 150, 'wall', 4) + lock(682, 220), 2000)}
+        ${A(t(704, 360, 'No way in', 'hd ambert'), 2300)}`), '', lede(s));
+    },
 
     's1-intro': (s) => stage(s, svg('1408 330', 'Four standards that replaced many-to-many integrations with one shared contract.',
       s.items.map((item, i) => {
@@ -106,26 +114,32 @@
           return A(box(Z[2] + 287, y, 150, 56, e), 1700 + i * 120) + flow(d, 'mint', 1700) + pk(d, 'mint', 1900 + i * 300);
         }).join('')}`, 'fixed'), psuCaps(s)),
 
-    skills: (s) => stage(s, svg('1408 470', 'Agent-specific instruction files converge into one SKILL.md folder that compatible agents can use.', `
-        ${['CLAUDE.md', '.cursorrules', 'copilot-instructions.md'].map((doc, i) => {
-          const y = 40 + i * 120;
-          const d = `M370 ${y + 30}C450 ${y + 30} 440 230 520 230`;
-          return A(box(0, y, 370, 60, doc, '', '', 'lbl mono'), i * 150) + flow(d, '', 600) + pk(d, '', 700 + i * 350);
+    'know-how': (s) => stage(s, svg('1408 470', 'Agent-specific instruction files converge into AGENTS.md for always-on guidance and SKILL.md folders for on-demand workflows, which compatible agents read.', `
+        ${A(t(160, 30, 'One file per agent', 'sub'), 0)}
+        ${s.files.map((doc, i) => {
+          const y = 60 + i * 120;
+          const d = `M330 ${y + 30}C420 ${y + 30} 420 ${i === 2 ? 340 : 140} 500 ${i === 2 ? 340 : 140}`;
+          return A(box(0, y, 330, 60, doc, '', '', 'sub mono'), i * 150) + flow(d, '', 600) + pk(d, '', 700 + i * 350);
         }).join('')}
-        ${A(`${r(520, 70, 380, 320, 'n blue', 18)}${p('M520 116H900', 'hair')}${t(552, 104, 'review-pr/', 'sub mono', 'start')}
-          ${t(552, 170, 'SKILL.md', 'big mono', 'start')}
-          ${['instructions', 'scripts/', 'references/'].map((row, i) => c(566, 222 + i * 52, 6, 'nd mintfill') + t(586, 230 + i * 52, row, 'lbl mono', 'start')).join('')}`, 700)}
-        ${['GitHub Copilot', 'Claude Code', 'Codex'].map((agent, i) => {
-          const y = 40 + i * 120;
-          const d = `M900 230C1010 230 1010 ${y + 30} 1130 ${y + 30}`;
-          return flow(d, 'mint', 1200) + pk(d, 'mint', 1400 + i * 300) + A(box(1130, y, 278, 60, agent), 1300 + i * 150);
+        ${s.formats.map((f, i) => {
+          const y = 40 + i * 210;
+          return A(r(500, y, 400, 190, `n ${i ? 'mint' : 'blue'}`, 16) + t(530, y + 46, f.h, 'hd mono', 'start') +
+            t(870, y + 46, f.p, `sub ${i ? 'mintt' : 'bluet'}`, 'end') + p(`M500 ${y + 66}H900`, 'hair') +
+            f.rows.map((row, k) => c(544, y + 98 + k * 34, 5, `nd ${i ? 'mintfill' : 'bluefill'}`) + t(562, y + 105 + k * 34, row, 'sub', 'start')).join(''), 700 + i * 250);
         }).join('')}
-        ${A(t(185, 440, 'Scattered per agent', 'sub') + t(710, 440, 'One shared folder', 'sub') + t(1269, 440, 'Any compatible agent', 'sub'), 1700)}`),
+        ${A(t(1269, 30, 'Any compatible agent', 'sub'), 1400)}
+        ${s.agents.map((agent, i) => {
+          const y = 60 + i * 120;
+          const dA = `M900 135C1010 135 1010 ${y + 30} 1130 ${y + 30}`;
+          const dS = `M900 345C1010 345 1010 ${y + 30} 1130 ${y + 30}`;
+          return flow(dA, '', 1300) + flow(dS, 'mint', 1300) + pk(dA, '', 1500 + i * 300) + pk(dS, 'mint', 1800 + i * 300) +
+            A(box(1130, y, 278, 60, agent, '', i === 2 ? 'dash' : ''), 1400 + i * 150);
+        }).join('')}`),
       footer(s)),
 
-    mcp: (s) => stage(s, svg('1408 380', 'Every AI app rebuilt every tool integration, until MCP servers exposed tools through one protocol.', `
+    mcp: (s) => stage(s, svg('1408 380', 'Every AI app rebuilt every tool integration and its sign-in, until one MCP server with OAuth served every client.', `
         ${['Chat app', 'IDE', 'CLI agent'].map((e, i) => box(0, 40 + i * 110, 150, 56, e)).join('')}
-        ${['GitHub', 'Postgres', 'Browser'].map((e, i) => box(287, 40 + i * 110, 150, 56, e)).join('')}
+        ${['Slack', 'Postgres', 'Browser'].map((e, i) => box(287, 40 + i * 110, 150, 56, e)).join('')}
         ${tangle(150, [68, 178, 288], 287, [68, 178, 288], 100)}
         ${A(t(Z[1] + 218, 60, s.math, 'math'), 900)}
         ${A(box(Z[1], 150, 140, 64, 'Client'), 700)}
@@ -134,7 +148,7 @@
         ${A(r(Z[1] + 160, 142, 116, 80, 'n blue') + t(Z[1] + 218, 194, 'MCP', 'big mono bluet'), 900)}
         ${A(r(Z[1] + 297, 96, 140, 180, 'n') + t(Z[1] + 367, 132, 'Server', 'lbl') +
           ['tools', 'resources', 'prompts'].map((row, i) => t(Z[1] + 367, 176 + i * 36, row, 'sub mono')).join(''), 1100)}
-        ${A(box(Z[2], 150, 214, 64, 'GitHub server', '', 'mint'), 1500)}
+        ${A(box(Z[2], 150, 214, 64, 'Slack server', '', 'mint') + r(Z[2] + 52, 224, 110, 36, 'okpill', 18) + t(Z[2] + 107, 249, 'OAuth', 'sub mono mintt'), 1500)}
         ${['VS Code', 'Claude', 'Codex', 'Your agent'].map((e, i) => {
           const y = 20 + i * 82;
           const d = `M${Z[2] + 214} 182C${Z[2] + 252} 182 ${Z[2] + 248} ${y + 28} ${Z[2] + 287} ${y + 28}`;
@@ -183,10 +197,10 @@
         }).join('')}`)),
 
     's2-intro': (s) => side(`<h2>${s.title}</h2><p class="lede">${s.lede}</p>`,
-      svg('832 700', 'Clients connect to a host that owns running sessions; a harness runs each agent.', `
+      svg('832 700', 'An editor, the Agents window, a browser, and your own client connect to a host that holds running sessions; a harness runs each agent.', `
         ${A(t(416, 64, `${s.items[2].h} · ${s.items[2].p}`, 'sub'), 200)}
-        ${['Editor', 'Agents window', 'Your client'].map((label, i) => A(box(20 + i * 276, 100, 240, 76, label), 300 + i * 160)).join('')}
-        ${[140, 416, 692].map((x, i) => {
+        ${s.clients.map((label, i) => A(box(6 + i * 207, 100, 198, 76, label, '', label === 'Browser' ? 'blue' : ''), 300 + i * 140)).join('')}
+        ${s.clients.map((_, i) => 105 + i * 207).map((x, i) => {
           const d = `M${x} 176C${x} 250 416 236 416 300`;
           return draw(d, 'w', 800 + i * 150, 700) + `<path d="${d}" class="fl" style="--d:1500ms"/>` + pk(`M416 300C416 236 ${x} 250 ${x} 176`, '', 1700 + i * 400);
         }).join('')}
@@ -200,10 +214,10 @@
       return stage(s, svg('1408 470', 'Harness, environment, and interface are chosen independently: Claude in a Dev Container, used from VS Code.', `
         ${s.cols.map((col, i) => A(t(xs[i], 44, col.h, 'hd bluet', 'start'), i * 150) + col.items.map((item, j) => {
           const picked = picks[i] === j;
-          return `<g class="${picked ? 'pick' : ''}" style="--d:${700 + i * 450}ms">${A(box(xs[i], 80 + j * 90, 420, 64, item), 150 + i * 150 + j * 80)}</g>`;
+          return `<g class="${picked ? 'pick' : ''}" style="--d:${700 + i * 450}ms">${A(box(xs[i], 80 + j * 80, 420, 64, item), 150 + i * 150 + j * 80)}</g>`;
         }).join('')).join('')}
-        ${draw('M420 202H494M914 202C951 202 951 112 988 112', 'route', 600, 1700)}
-        ${A(t(704, 410, s.examples[0], 'lbl mintt'), 2100)}`));
+        ${draw('M420 192H494M914 192C951 192 951 112 988 112', 'route', 600, 1700)}
+        ${A(t(704, 445, s.examples[0], 'lbl mintt'), 2100)}`));
     },
 
     how: (s) => {
@@ -442,12 +456,12 @@
   scenes.acp = compare;
   scenes.a2a = compare;
 
-  scenes['s6-intro'] = (s) => stage(s, svg('1408 430', 'One session shown in four clients: an Agents window, a canvas, a game, and a client you write.', `
-      ${[[40, 20, 'Agents window'], [40, 240, 'Canvas'], [1048, 20, 'Your client'], [1048, 240, 'Game']].map(([x, y, label], i) => {
+  scenes['s6-intro'] = (s) => stage(s, svg('1408 430', 'One session shown in four clients: the Agents window, a canvas, a browser at vscode.dev/agents, and a game.', `
+      ${[[40, 20, 'Agents window'], [40, 240, 'Canvas'], [1048, 20, 'Browser'], [1048, 240, 'Game']].map(([x, y, label], i) => {
         const inside = [
           [0, 1, 2].flatMap((col) => [0, 1].map((row) => r(x + 28 + col * 92, y + 66 + row * 52, 80, 40, row + col === 1 ? 'tile hot' : 'tile', 8))).join(''),
           c(x + 90, y + 110, 34, 'shape') + r(x + 150, y + 76, 70, 70, 'shape sq', 10) + p(`M${x + 250} ${y + 146}l34 -66l34 66z`, 'shape'),
-          [56, 92, 70, 120, 104].map((h, k) => r(x + 40 + k * 50, y + 160 - h, 32, h, k === 3 ? 'bar hot' : 'bar', 4)).join(''),
+          r(x + 24, y + 58, 272, 34, 'urlbar', 17) + t(x + 46, y + 81, 'vscode.dev/agents', 'sub mono', 'start') + [0, 1, 2].map((k) => r(x + 28 + k * 92, y + 106, 80, 50, k === 1 ? 'tile hot' : 'tile', 8)).join(''),
           [0, 1, 2].map((k) => p(`M${x + 160} ${y + 70 + k * 26}l60 30l-60 30l-60 -30z`, 'iso')).join('') + `<g class="walker">${c(x + 160, y + 118, 11, 'pulse')}</g>`
         ][i];
         const side = x < 700 ? `M554 ${210}C470 210 460 ${y + 90} 360 ${y + 90}` : `M854 210C940 210 950 ${y + 90} 1048 ${y + 90}`;
@@ -460,7 +474,7 @@
     svg('832 700', 'The agent session now lives outside the chat window and connects to many clients.', `
       <g class="ghostwin">${win(20, 470, 240, 190, 'Chat')}</g>
       ${draw('M250 500C300 470 320 440 330 414', 'trail', 300, 700)}
-      ${[[30, 60, 'VS Code'], [310, 20, 'Agents window'], [590, 90, 'Your client'], [560, 520, 'Game']].map(([x, y, label], i) => {
+      ${[[30, 60, 'VS Code'], [310, 20, 'Agents window'], [590, 90, 'Browser'], [600, 300, 'Your client'], [560, 520, 'Game']].map(([x, y, label], i) => {
         const d = `M416 352L${x + 110} ${y + 36}`;
         return draw(d, 'w', 500 + i * 140, 600) + `<path d="${d}" class="fl mint" style="--d:1200ms"/>` + pk(d, 'mint', 1300 + i * 400) +
           A(box(x, y, 220, 72, label), 700 + i * 140);
